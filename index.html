@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>秋招日历 · 战文彬 · 2026 秋招季</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:#f4f6f3;color:#3f3f3f;line-height:1.55;padding:20px 14px 40px;
+  }
+  .wrap{max-width:1560px;margin:0 auto}
+
+  header{border-bottom:3px solid #006C39;padding-bottom:13px;margin-bottom:16px}
+  h1{font-size:23px;color:#006C39;font-weight:700}
+  .sub{font-size:12.5px;color:#6b6b6b;margin-top:5px}
+  .sub b{color:#A13F0B}
+
+  .bar{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    background:#fff;border:1px solid #e3e7e2;border-radius:9px;padding:10px 13px;margin-bottom:10px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  .bar .lbl{font-size:11.5px;color:#7a7a7a;font-weight:600}
+  .grp{display:flex;gap:4px}
+  button{
+    font-family:inherit;font-size:12.5px;padding:6px 12px;border-radius:7px;cursor:pointer;
+    border:1px solid #d5dbd3;background:#fff;color:#4a4a4a;transition:.13s;
+  }
+  button:hover{border-color:#006C39;color:#006C39}
+  button.on{background:#006C39;border-color:#006C39;color:#fff;font-weight:600}
+  button.warn{border-color:#e5c3a8;color:#A13F0B;background:#fff9f5}
+  button.warn:hover{background:#A13F0B;color:#fff;border-color:#A13F0B}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  button:disabled:hover{border-color:#d5dbd3;color:#4a4a4a;background:#fff}
+  .spacer{flex:1}
+  .cnt{font-size:12px;color:#A13F0B;font-weight:600}
+
+  .legend{display:flex;flex-wrap:wrap;gap:13px;font-size:11.5px;color:#666;margin-bottom:11px;padding-left:2px}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .lg1{background:#006C39}.lg2{background:#A13F0B}.lg3{background:#8aab96}.lg4{background:#c9d0ca}
+
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+  .col{background:#fff;border:1px solid #e3e7e2;border-radius:9px;overflow:hidden;display:flex;flex-direction:column}
+  .col.today{border-color:#A13F0B;border-width:2px}
+  .chead{padding:7px 9px;background:#eef2ed;border-bottom:1px solid #e3e7e2}
+  .chead .dow{font-size:10.5px;color:#7a7a7a}
+  .chead .dnum{font-size:16px;font-weight:700;color:#006C39;line-height:1.2}
+  .col.today .chead{background:#fdf1e9}
+  .col.today .dnum{color:#A13F0B}
+  .chead .dnote{font-size:10px;color:#9a9a9a}
+  .cbody{padding:5px;display:flex;flex-direction:column;gap:4px;min-height:110px;max-height:640px;overflow-y:auto}
+  .cbody::-webkit-scrollbar{width:6px}
+  .cbody::-webkit-scrollbar-thumb{background:#d5dbd3;border-radius:3px}
+
+  .ev{
+    position:relative;border-radius:6px;padding:5px 15px 5px 7px;background:#fff;
+    border:1px solid #e6eae4;border-left:3px solid #c9d0ca;font-size:11.5px;cursor:pointer;
+  }
+  .ev:hover{border-color:#006C39;box-shadow:0 2px 6px rgba(0,0,0,.07);z-index:5}
+  .ev.gone{animation:fade .15s ease forwards}
+  @keyframes fade{from{opacity:1}to{opacity:0;transform:translateX(8px)}}
+  .ev.back{animation:back .3s ease}
+  @keyframes back{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+  .ev.l1{border-left-color:#006C39;background:#f2f8f4}
+  .ev.l2{border-left-color:#A13F0B;background:#fdf6f1}
+  .ev.l3{border-left-color:#8aab96}
+  .ev.l4{border-left-color:#c9d0ca;background:#fafbfa;color:#7e8480}
+  .ev .t{font-weight:700;color:#006C39;font-size:10.5px;font-variant-numeric:tabular-nums}
+  .ev.l2 .t{color:#A13F0B}
+  .ev.l4 .t{color:#96a09a}
+  .ev .o{font-size:11.5px;color:#2f2f2f;margin-top:1px;line-height:1.35}
+  .ev.l4 .o{color:#6d736f}
+  .ev .p{font-size:10px;color:#8d8d8d;margin-top:2px}
+  .ev .n{font-size:10.5px;color:#A13F0B;margin-top:3px;display:none;background:#fff8f3;padding:3px 5px;border-radius:3px;line-height:1.5}
+  .ev .sl{display:none;font-size:10px;color:#006C39;margin-top:3px;text-decoration:none;border-top:1px dashed #dfe3de;padding-top:3px}
+  .ev .sl:hover{text-decoration:underline}
+  .ev .hint{display:none;font-size:9.5px;color:#b0b6ae;margin-top:2px}
+  .ev:hover .n,.ev:hover .sl,.ev:hover .hint{display:block}
+  .ev .x{
+    position:absolute;top:2px;right:2px;width:16px;height:16px;line-height:14px;text-align:center;
+    border-radius:4px;color:#bcc4ba;font-size:15px;cursor:pointer;user-select:none;
+  }
+  .ev .x:hover{background:#A13F0B;color:#fff}
+  .badge{display:inline-block;font-size:9px;padding:0 4px;border-radius:3px;margin-left:3px;vertical-align:1px;color:#fff;font-weight:600}
+  .b-city{background:#006C39}
+  .b-thu{background:#660874}
+  .b-pku{background:#94070A}
+  .b-buaa{background:#1a5490}
+  .b-other{background:#9a9a9a}
+  .b-key{background:#A13F0B}
+  .empty{font-size:11px;color:#c2c8c0;text-align:center;padding:14px 0}
+
+  /* 回收站 */
+  .bin{display:none;background:#fffaf6;border:1px solid #f0d9c6;border-radius:9px;padding:11px 13px;margin-bottom:11px}
+  .bin.show{display:block}
+  .bin h3{font-size:12.5px;color:#A13F0B;margin-bottom:7px}
+  .bin .row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:11.5px;padding:5px 0;border-bottom:1px dashed #f0e2d6}
+  .bin .row:last-child{border-bottom:none}
+  .bin .rk{color:#8a8a8a;font-variant-numeric:tabular-nums;min-width:86px}
+  .bin .ro{color:#3f3f3f;flex:1;min-width:180px}
+  .bin button{padding:3px 9px;font-size:11px;border-color:#c9dbcd;color:#006C39}
+  .bin button:hover{background:#006C39;color:#fff;border-color:#006C39}
+  .bin .none{font-size:11.5px;color:#a8a8a8}
+
+  /* 弹窗 */
+  .mask{display:none;position:fixed;inset:0;background:rgba(30,36,32,.42);z-index:99;
+        align-items:center;justify-content:center;padding:20px}
+  .mask.show{display:flex}
+  .modal{background:#fff;border-radius:12px;max-width:560px;width:100%;padding:20px 22px;
+         box-shadow:0 12px 40px rgba(0,0,0,.22);max-height:86vh;overflow-y:auto}
+  .modal .mt{font-size:17px;font-weight:700;color:#006C39;line-height:1.4;padding-right:12px}
+  .modal .mb{display:inline-block;font-size:10px;padding:1px 6px;border-radius:3px;color:#fff;font-weight:600;vertical-align:2px;margin-left:5px}
+  .modal .kv{display:flex;gap:9px;font-size:12.5px;margin-top:9px;align-items:flex-start}
+  .modal .kv .k{color:#8a8a8a;min-width:52px}
+  .modal .kv .v{color:#333;flex:1}
+  .modal .note{background:#fff8f3;border-left:3px solid #A13F0B;padding:8px 10px;border-radius:4px;
+               font-size:12.5px;color:#7a3d18;margin-top:11px;line-height:1.65}
+  .modal .src{background:#f1f6f2;border-left:3px solid #006C39;padding:8px 10px;border-radius:4px;
+              font-size:12px;margin-top:9px;line-height:1.6}
+  .modal .src a{color:#006C39;font-weight:600}
+  .modal .acts{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .modal .acts button{padding:7px 15px}
+  .modal .refs a{display:block;color:#006C39;font-size:12.5px;padding:5px 0;text-decoration:none;border-bottom:1px dashed #eaecea}
+  .modal .refs a:hover{text-decoration:underline}
+
+  /* 提示条 */
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(16px);
+    background:#3f3f3f;color:#fff;font-size:12.5px;padding:10px 14px;border-radius:8px;
+    display:flex;align-items:center;gap:12px;opacity:0;pointer-events:none;transition:.22s;z-index:200;
+    box-shadow:0 6px 20px rgba(0,0,0,.24);max-width:88vw;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+  .toast button{background:transparent;border:1px solid rgba(255,255,255,.5);color:#fff;padding:3px 11px;font-size:12px}
+  .toast button:hover{background:#fff;color:#3f3f3f;border-color:#fff}
+
+  footer{margin-top:24px;padding-top:13px;border-top:1px solid #dfe3de;font-size:11.5px;color:#8b8b8b;line-height:1.85}
+  footer b{color:#A13F0B}
+  footer a{color:#006C39}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>秋招活动日历 · 2026 秋招季</h1>
+  <div class="sub">战文彬 · 北理工材料学院 2027届 · 目标 <b>央企国企双碳岗 + 北京体制内</b> · 各校场次一视同仁 ·
+    <b>悬停看详情与来源链接，点卡片看完整信息，右上角 × 叉掉不去的</b>（自动保存，可撤销）</div>
+</header>
+
+<div class="bar">
+  <span class="lbl">周次</span>
+  <div class="grp" id="wkbar"></div>
+  <span class="lbl" style="margin-left:9px">筛选</span>
+  <div class="grp">
+    <button id="f-all" class="on" onclick="setF('all')">全部</button>
+    <button id="f-key" onclick="setF('key')">必去+优先</button>
+    <button id="f-bit" onclick="setF('bit')">北理工</button>
+    <button id="f-out" onclick="setF('out')">清华北大北航</button>
+    <button id="f-city" onclick="setF('city')">全市开放</button>
+  </div>
+  <div class="spacer"></div>
+  <span class="cnt" id="cnt"></span>
+  <button id="uBtn" onclick="undo()" disabled title="快捷键 Ctrl+Z">↩ 撤销</button>
+  <button id="bBtn" onclick="toggleBin()">回收站 (0)</button>
+  <button class="warn" onclick="restore()">全部恢复</button>
+  <button onclick="openRefs()">全部来源</button>
+</div>
+
+<div class="bin" id="bin"><h3>已叉掉的场次（可单独恢复）</h3><div id="binList"></div></div>
+
+<div class="legend">
+  <span><i class="lg1"></i>必去</span>
+  <span><i class="lg2"></i>优先</span>
+  <span><i class="lg3"></i>可去</span>
+  <span><i class="lg4"></i>可弃</span>
+  <span><span class="badge b-thu">清华</span></span>
+  <span><span class="badge b-pku">北大</span></span>
+  <span><span class="badge b-buaa">北航</span></span>
+  <span><span class="badge b-other">其他校</span></span>
+  <span><span class="badge b-city">全市</span> 面向全北京高校生</span>
+  <span><span class="badge b-key">重磅</span></span>
+</div>
+
+<div class="cal" id="cal"></div>
+
+<footer>
+  <b>数据来源：</b>北理工就业资讯网（9月完整日历）、北理就业公众号、北航就业公众号、清华职业发展指导中心、北大就业信息网、北京高校大学生就业创业信息网（成功就业）、中央民族大学 / 北工大 / 农大 / 北师大 / 人大就业网。每条活动都带来源链接，点击可核实。<br>
+  <b>提醒：</b>清北部分双选会官方写明面向本校学生，宣讲会现场通常可旁听；前往外校请带身份证、按校方入校规定报备。京彩就业场次时间与展位名单以 bjbys 官网为准。<br>
+  <b>叉掉 / 撤销记录保存在本机浏览器</b>（localStorage），换设备或清缓存会重置。数据版本 <span id="dv"></span>。
+</footer>
+
+</div>
+
+<div class="mask" id="mask" onclick="closeM()">
+  <div class="modal" id="modal" onclick="event.stopPropagation()"></div>
+</div>
+
+<div class="toast" id="toast">
+  <span id="toastMsg"></span>
+  <button id="toastBtn" onclick="undo()">撤销</button>
+</div>
+
+<script src="events.js"></script>
+<script>
+var DOW=["周一","周二","周三","周四","周五","周六","周日"];
+var MM={bit:["","本校"],thu:["b-thu","清华"],pku:["b-pku","北大"],buaa:["b-buaa","北航"],other:["b-other","外校"],city:["b-city","全市"]};
+var LV={1:["必去","#006C39"],2:["优先","#A13F0B"],3:["可去","#8aab96"],4:["可弃","#9aa19c"]};
+
+var cur=0, filter="all";
+var K_H="zwb_cal_hidden_v2", K_U="zwb_cal_undo_v2";
+var hidden={}, undoStack=[];
+
+/* 稳定 key：日期|时间|单位 —— 数据增删不会串位 */
+var KEYS=[], KEY2IX={};
+D.forEach(function(x,ix){
+  var k=x[0]+"|"+x[1]+"|"+x[2], kk=k, n=2;
+  while(KEY2IX[kk]!==undefined){ kk=k+"#"+n; n++; }
+  KEYS[ix]=kk; KEY2IX[kk]=ix;
+});
+
+try{ hidden=JSON.parse(localStorage.getItem(K_H)||"{}"); }catch(e){ hidden={}; }
+try{ undoStack=JSON.parse(localStorage.getItem(K_U)||"[]"); }catch(e){ undoStack=[]; }
+function save(){
+  try{ localStorage.setItem(K_H,JSON.stringify(hidden)); localStorage.setItem(K_U,JSON.stringify(undoStack)); }catch(e){}
+}
+
+function srcOf(x){
+  var s=SRC[x[8]]||{n:"未标注来源",u:""};
+  return { n:s.n, u:x[9]||s.u };
+}
+function linkify(s){
+  if(!s) return "";
+  return s.replace(/(https?:\/\/[^\s，。；)）]+)/g,
+    '<a href="$1" target="_blank" rel="noopener" onclick="event.stopPropagation()">$1</a>');
+}
+function dayOf(a,i){
+  var m=parseInt(a.split("-")[0],10), d=parseInt(a.split("-")[1],10)+i;
+  var lens={9:30,10:31,11:30,12:31};
+  if(d>lens[m]){ d-=lens[m]; m+=1; }
+  return ("0"+m).slice(-2)+"-"+("0"+d).slice(-2);
+}
+function todayStr(){
+  var d=new Date();
+  return ("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);
+}
+var TODAY=todayStr();
+
+function render(){
+  var wk=WEEKS[cur], html="";
+  for(var i=0;i<7;i++){
+    var d=dayOf(wk[0],i);
+    var dn=parseInt(d.split("-")[1],10), mo=d.split("-")[0];
+    var items=[];
+    D.forEach(function(x,ix){ if(x[0]===d) items.push(ix); });
+    var vis=items.filter(function(ix){
+      var x=D[ix];
+      if(hidden[KEYS[ix]]) return false;
+      if(filter==="key" && x[4]>2) return false;
+      if(filter==="bit" && x[5]!=="bit") return false;
+      if(filter==="out" && ["thu","pku","buaa"].indexOf(x[5])<0) return false;
+      if(filter==="city" && x[5]!=="city") return false;
+      return true;
+    });
+    var cards='<div class="empty">—</div>';
+    if(vis.length){
+      cards="";
+      vis.forEach(function(ix){
+        var x=D[ix], m=MM[x[5]]||["b-other","其他"], s=srcOf(x);
+        var badge = x[5]==="bit" ? "" : '<span class="badge '+m[0]+'">'+m[1]+'</span>';
+        var kb = x[7] ? '<span class="badge b-key">重磅</span>' : '';
+        var note = x[6] ? '<div class="n">'+linkify(x[6])+'</div>' : '';
+        var sl = s.u ? '<a class="sl" href="'+s.u+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">来源：'+s.n+' ↗</a>' : '';
+        cards += '<div class="ev l'+x[4]+'" data-i="'+ix+'" onclick="openM('+ix+')">'
+          + '<div class="x" onclick="event.stopPropagation();hide('+ix+')" title="叉掉">&times;</div>'
+          + '<div class="t">'+x[1]+'</div>'
+          + '<div class="o">'+x[2]+badge+kb+'</div>'
+          + '<div class="p">'+x[3]+'</div>'+note+sl
+          + '<div class="hint">点击看完整详情 ↗</div></div>';
+      });
+    }
+    html += '<div class="col'+(d===TODAY?" today":"")+'"><div class="chead"><div class="dow">'+DOW[i]+(d===TODAY?" · 今天":"")+'</div>'
+      + '<div class="dnum">'+(mo==="10"?"10/":mo==="11"?"11/":"")+dn+'</div>'
+      + '<div class="dnote">'+vis.length+' 场</div></div>'
+      + '<div class="cbody">'+cards+'</div></div>';
+  }
+  document.getElementById("cal").innerHTML=html;
+  updBtns();
+}
+
+function updBtns(){
+  var ks=Object.keys(hidden).filter(function(k){return hidden[k];});
+  document.getElementById("cnt").textContent = ks.length>0 ? ("已叉掉 "+ks.length+" 场") : "";
+  document.getElementById("bBtn").textContent = "回收站 ("+ks.length+")";
+  document.getElementById("uBtn").disabled = undoStack.length===0;
+  document.getElementById("uBtn").textContent = "↩ 撤销"+(undoStack.length?" ("+undoStack.length+")":"");
+  renderBin();
+}
+
+function renderBin(){
+  var ks=Object.keys(hidden).filter(function(k){return hidden[k];});
+  var box=document.getElementById("binList");
+  if(!ks.length){ box.innerHTML='<div class="none">还没有叉掉任何场次。</div>'; return; }
+  var rows=ks.map(function(k){ return {k:k, ix:KEY2IX[k]}; })
+             .filter(function(o){ return o.ix!==undefined; })
+             .sort(function(a,b){ var x=D[a.ix],y=D[b.ix]; return x[0]===y[0] ? x[1].localeCompare(y[1]) : x[0].localeCompare(y[0]); });
+  box.innerHTML = rows.map(function(o){
+    var x=D[o.ix];
+    return '<div class="row"><span class="rk">'+x[0].replace("-","/")+' '+x[1]+'</span>'
+      + '<span class="ro">'+x[2]+' <span style="color:#9a9a9a">· '+x[3]+'</span></span>'
+      + '<button onclick="unhide(\''+o.k+'\')">恢复</button></div>';
+  }).join("");
+}
+function toggleBin(){ document.getElementById("bin").classList.toggle("show"); }
+
+/* ---------- 叉掉 / 撤销 / 恢复 ---------- */
+function hide(ix){
+  var k=KEYS[ix];
+  hidden[k]=1;
+  undoStack.push(k);
+  if(undoStack.length>200) undoStack.shift();
+  save();
+  var el=document.querySelector('[data-i="'+ix+'"]');
+  if(el) el.className+=" gone";
+  setTimeout(render,140);
+  toast("已叉掉："+D[ix][2]);
+}
+function undo(){
+  if(!undoStack.length) return;
+  var k=undoStack.pop();
+  delete hidden[k];
+  save();
+  var ix=KEY2IX[k];
+  render();
+  if(ix!==undefined){
+    var el=document.querySelector('[data-i="'+ix+'"]');
+    if(el){ el.className+=" back"; setTimeout(function(){ el.classList.remove("back"); },320); }
+  }
+  var row = ix!==undefined ? D[ix] : null;
+  toast(row ? ("已恢复："+row[2]) : "已恢复 1 场", false);
+}
+function unhide(k){
+  delete hidden[k];
+  var p=undoStack.indexOf(k); if(p>=0) undoStack.splice(p,1);
+  save(); render();
+  var ix=KEY2IX[k];
+  if(ix!==undefined){
+    var el=document.querySelector('[data-i="'+ix+'"]');
+    if(el){ el.className+=" back"; setTimeout(function(){ el.classList.remove("back"); },320); }
+    toast("已恢复："+D[ix][2], false);
+  }
+}
+function restore(){ hidden={}; undoStack=[]; save(); render(); toast("已恢复全部场次", false); }
+
+/* ---------- 提示条 ---------- */
+var tTimer=null;
+function toast(msg, undoable){
+  var t=document.getElementById("toast");
+  document.getElementById("toastMsg").textContent=msg;
+  var btn=document.getElementById("toastBtn");
+  if(btn) btn.style.display = (undoable===false) ? "none" : "";
+  t.classList.add("show");
+  clearTimeout(tTimer);
+  tTimer=setTimeout(function(){ t.classList.remove("show"); }, undoable===false?2600:5000);
+}
+
+/* ---------- 详情弹窗 ---------- */
+function openM(ix){
+  var x=D[ix], m=MM[x[5]]||["b-other","其他"], s=srcOf(x);
+  var lv=LV[x[4]]||["","#666"];
+  var kb = x[7] ? '<span class="mb" style="background:#A13F0B">重磅</span>' : '';
+  var sch = x[5]==="bit" ? '<span class="mb" style="background:#006C39">北理工</span>' : '<span class="mb" style="background:'+({thu:"#660874",pku:"#94070A",buaa:"#1a5490",other:"#9a9a9a",city:"#006C39"}[x[5]]||"#9a9a9a")+'">'+m[1]+'</span>';
+  var h='';
+  h+='<div class="mt">'+x[2]+kb+'</div>';
+  h+='<div class="kv"><span class="k">时间</span><span class="v">'+x[0].replace("-","月")+'日 '+x[1]+'</span></div>';
+  h+='<div class="kv"><span class="k">地点</span><span class="v">'+x[3]+'</span></div>';
+  h+='<div class="kv"><span class="k">分类</span><span class="v">'+sch+' <span class="mb" style="background:'+lv[1]+'">'+lv[0]+'</span></span></div>';
+  if(x[6]) h+='<div class="note"><b>建议：</b>'+linkify(x[6])+'</div>';
+  h+='<div class="src"><b>来源（点击核实）：</b><br><a href="'+s.u+'" target="_blank" rel="noopener">'+s.n+' ↗</a>'
+    + (s.u?'<br><span style="color:#8a8a8a;font-size:11px">'+s.u+'</span>':'') + '</div>';
+  h+='<div class="acts">'
+    + (hidden[KEYS[ix]]
+        ? '<button class="on" onclick="unhide(\''+KEYS[ix]+'\');closeM()">恢复这场</button>'
+        : '<button class="warn" onclick="hide('+ix+');closeM()">叉掉这场</button>')
+    + '<button onclick="closeM()">关闭</button></div>';
+  document.getElementById("modal").innerHTML=h;
+  document.getElementById("mask").classList.add("show");
+}
+function closeM(){ document.getElementById("mask").classList.remove("show"); }
+
+function openRefs(){
+  var h='<div class="mt">全部信息源</div>'
+    + '<div style="font-size:12px;color:#7a7a7a;margin-top:6px;line-height:1.7">下面每一条都是本次整理实际抓取的页面，可用于逐条核实。北理工就业资讯网能查到整月日历，比公众号推文全得多，建议优先刷这个。</div>'
+    + '<div class="refs" style="margin-top:12px">'
+    + REFS.map(function(r){ return '<a href="'+r.u+'" target="_blank" rel="noopener">'+r.n+' ↗</a>'; }).join("")
+    + '</div><div class="acts"><button onclick="closeM()">关闭</button></div>';
+  document.getElementById("modal").innerHTML=h;
+  document.getElementById("mask").classList.add("show");
+}
+
+function setF(f){
+  filter=f;
+  ["all","key","bit","out","city"].forEach(function(k){
+    document.getElementById("f-"+k).className=(k===f?"on":"");
+  });
+  render();
+}
+function setW(i){
+  cur=i;
+  var bar=document.getElementById("wkbar");
+  Array.prototype.forEach.call(bar.children,function(c,idx){ c.className=(idx===i?"on":""); });
+  render();
+}
+
+document.addEventListener("keydown",function(e){
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="z"){ e.preventDefault(); undo(); }
+  if(e.key==="Escape"){ closeM(); }
+});
+
+(function(){
+  document.getElementById("dv").textContent = DATA_VERSION;
+  var bar=document.getElementById("wkbar");
+  WEEKS.forEach(function(w,i){
+    var b=document.createElement("button");
+    b.textContent=w[2]+" "+w[0].replace("09-","9/").replace("10-","10/")+"–"+w[1].replace("-","/");
+    b.className=(i===0?"on":"");
+    b.onclick=function(){setW(i);};
+    bar.appendChild(b);
+  });
+  // 默认跳到今天所在周
+  for(var i=0;i<WEEKS.length;i++){
+    if(TODAY>=WEEKS[i][0] && TODAY<=WEEKS[i][1]){ cur=i; Array.prototype.forEach.call(bar.children,function(c,idx){c.className=(idx===i?"on":"");}); break; }
+  }
+  render();
+})();
+</script>
+</body>
+</html>
