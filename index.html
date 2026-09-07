@@ -154,6 +154,7 @@
   footer{margin-top:24px;padding-top:13px;border-top:1px solid #dfe3de;font-size:11.5px;color:#8b8b8b;line-height:1.85}
   footer b{color:#A13F0B}
   footer a{color:#006C39}
+  .quote{margin-top:14px;padding:11px 16px;background:#f2f7f3;border-left:3px solid #006C39;border-radius:0 8px 8px 0;font-size:13px;color:#2f5e42;line-height:1.8;font-style:italic}
 </style>
 </head>
 <body>
@@ -206,6 +207,7 @@
   <b>数据来源：</b>北理工就业资讯网（9月完整日历）、北理就业公众号、北航就业公众号、清华职业发展指导中心、北大就业信息网、北京高校大学生就业创业信息网（成功就业）、中央民族大学 / 北工大 / 农大 / 北师大 / 人大就业网。每条活动都带来源链接，点击可核实。<br>
   <b>提醒：</b>清北部分双选会官方写明面向本校学生，宣讲会现场通常可旁听；前往外校请带身份证、按校方入校规定报备。京彩就业场次时间与展位名单以 bjbys 官网为准。<br>
   <b>叉掉 / 撤销记录保存在本机浏览器</b>（localStorage），换设备或清缓存会重置。数据版本 <span id="dv"></span>。
+  <div id="quote" class="quote"></div>
 </footer>
 
 </div>
@@ -434,6 +436,35 @@ function openRefs(){
   document.getElementById("modal").innerHTML=h;
   document.getElementById("mask").classList.add("show");
 }
+
+/* ---------- 底部随机鼓励语：每次打开换一句 ---------- */
+var QUOTES = [
+  "你已经把地图画好了，接下来只需要一场一场去走。",
+  "秋招不是百米冲刺，是持久的阵地战——而坚持下来的人，本来就少。",
+  "机会不会喊你的名字，但清单会。今天该去哪一场，抬头看日历就行。",
+  "被拒十次不说明你不行，只说明你还在场上。不下牌桌，就还有一手好牌。",
+  "简历递出去的那一刻，运气就已经开始向你倾斜了。",
+  "别人在焦虑的时候，你在行动——这就是差距拉开的方式。",
+  "每一场宣讲会都是一次侦察：摸清对手、练好表达、校准方向。",
+  "Offer 不会从天而降，但会从一次次准时到场里长出来。",
+  "紧张是正常的，说明你在乎；在乎的人，通常不会输得太难看。",
+  "今天多投一份简历，十月就多一分从容。",
+  "准备好的你，值得所有正在招人的好单位认真看一眼。",
+  "选调、央企、双碳、体制内——路是多的，走的人要稳。",
+  "别怕起点慢，秋招比的是谁先拿到心动的那个，不是谁先拿到第一个。",
+  "把每一次面试都当成免费的陪练，练到第十一场，你就是别人眼里的老手。",
+  "你要做的不是变得完美，而是持续出现在对的场合里。",
+  "每晚睡前问一句：今天的事做完了吗？做完，就安心睡。",
+  "上岸不是玄学，是信息 × 准备 × 出勤率的乘积。你三样都在攒。",
+  "十一月回头看，会感谢九月每个早起排队的早晨。",
+  "同辈压力要有，但方向对了，慢一点也是在前进。",
+  "今天也是离 offer 更近的一天——去吧。"
+];
+(function(){
+  var q=document.getElementById("quote");
+  if(!q) return;
+  q.textContent="✦ "+QUOTES[Math.floor(Math.random()*QUOTES.length)];
+})();
 
 function setF(f){
   filter=f;
