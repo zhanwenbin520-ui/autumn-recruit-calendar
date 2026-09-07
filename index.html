@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>秋招日历 · 战文彬 · 2026 秋招季</title>
+<title>秋招活动日历 · 2026 秋招季</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{
@@ -84,7 +84,8 @@
   }
   .ev .x:hover{background:#A13F0B;color:#fff}
   .badge{display:inline-block;font-size:9px;padding:0 4px;border-radius:3px;margin-left:3px;vertical-align:1px;color:#fff;font-weight:600}
-  .b-city{background:#006C39}
+  .b-city{background:#0E7C7B}
+  .b-bit{background:#006C39}
   .b-thu{background:#660874}
   .b-pku{background:#94070A}
   .b-buaa{background:#1a5490}
@@ -122,6 +123,20 @@
   .modal .src a{color:#006C39;font-weight:600}
   .modal .acts{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
   .modal .acts button{padding:7px 15px}
+  .modal .mclose{
+    float:right;width:26px;height:26px;line-height:24px;text-align:center;border-radius:6px;
+    font-size:19px;color:#9aa19c;cursor:pointer;user-select:none;margin:-4px -6px 0 0;
+  }
+  .modal .mclose:hover{background:#A13F0B;color:#fff}
+  .modal .upd{margin-top:12px;font-size:12.5px;color:#4a4a4a;line-height:1.75}
+  .modal .upd .li{padding:5px 0 5px 15px;position:relative;border-bottom:1px dashed #eef1ee}
+  .modal .upd .li:last-child{border-bottom:none}
+  .modal .upd .li:before{content:"";position:absolute;left:2px;top:13px;width:5px;height:5px;border-radius:50%;background:#006C39}
+  .modal .upd b{color:#006C39}
+  .modal .cheer{
+    margin-top:14px;background:#f1f6f2;border-left:3px solid #006C39;border-radius:4px;
+    padding:11px 13px;font-size:13px;color:#2f5a42;line-height:1.8;
+  }
   .modal .refs a{display:block;color:#006C39;font-size:12.5px;padding:5px 0;text-decoration:none;border-bottom:1px dashed #eaecea}
   .modal .refs a:hover{text-decoration:underline}
 
@@ -146,7 +161,7 @@
 
 <header>
   <h1>秋招活动日历 · 2026 秋招季</h1>
-  <div class="sub">战文彬 · 北理工材料学院 2027届 · 目标 <b>央企国企双碳岗 + 北京体制内</b> · 各校场次一视同仁 ·
+  <div class="sub">各校场次一视同仁 ·
     <b>悬停看详情与来源链接，点卡片看完整信息，右上角 × 叉掉不去的</b>（自动保存，可撤销）</div>
 </header>
 
@@ -176,6 +191,7 @@
   <span><i class="lg2"></i>优先</span>
   <span><i class="lg3"></i>可去</span>
   <span><i class="lg4"></i>可弃</span>
+  <span><span class="badge b-bit">北理工</span> 本校</span>
   <span><span class="badge b-thu">清华</span></span>
   <span><span class="badge b-pku">北大</span></span>
   <span><span class="badge b-buaa">北航</span></span>
@@ -206,11 +222,12 @@
 <script src="events.js"></script>
 <script>
 var DOW=["周一","周二","周三","周四","周五","周六","周日"];
-var MM={bit:["","本校"],thu:["b-thu","清华"],pku:["b-pku","北大"],buaa:["b-buaa","北航"],other:["b-other","外校"],city:["b-city","全市"]};
+var MM={bit:["b-bit","北理工"],thu:["b-thu","清华"],pku:["b-pku","北大"],buaa:["b-buaa","北航"],other:["b-other","外校"],city:["b-city","全市"]};
+var MC={bit:"#006C39",thu:"#660874",pku:"#94070A",buaa:"#1a5490",other:"#9a9a9a",city:"#0E7C7B"};
 var LV={1:["必去","#006C39"],2:["优先","#A13F0B"],3:["可去","#8aab96"],4:["可弃","#9aa19c"]};
 
 var cur=0, filter="all";
-var K_H="zwb_cal_hidden_v2", K_U="zwb_cal_undo_v2";
+var K_H="zwb_cal_hidden_v2", K_U="zwb_cal_undo_v2", K_SEEN="zwb_cal_seen_ver";
 var hidden={}, undoStack=[];
 
 /* 稳定 key：日期|时间|单位 —— 数据增删不会串位 */
@@ -269,7 +286,7 @@ function render(){
       cards="";
       vis.forEach(function(ix){
         var x=D[ix], m=MM[x[5]]||["b-other","其他"], s=srcOf(x);
-        var badge = x[5]==="bit" ? "" : '<span class="badge '+m[0]+'">'+m[1]+'</span>';
+        var badge = '<span class="badge '+m[0]+'">'+m[1]+'</span>';
         var kb = x[7] ? '<span class="badge b-key">重磅</span>' : '';
         var note = x[6] ? '<div class="n">'+linkify(x[6])+'</div>' : '';
         var sl = s.u ? '<a class="sl" href="'+s.u+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">来源：'+s.n+' ↗</a>' : '';
@@ -371,7 +388,7 @@ function openM(ix){
   var x=D[ix], m=MM[x[5]]||["b-other","其他"], s=srcOf(x);
   var lv=LV[x[4]]||["","#666"];
   var kb = x[7] ? '<span class="mb" style="background:#A13F0B">重磅</span>' : '';
-  var sch = x[5]==="bit" ? '<span class="mb" style="background:#006C39">北理工</span>' : '<span class="mb" style="background:'+({thu:"#660874",pku:"#94070A",buaa:"#1a5490",other:"#9a9a9a",city:"#006C39"}[x[5]]||"#9a9a9a")+'">'+m[1]+'</span>';
+  var sch = '<span class="mb" style="background:'+(MC[x[5]]||"#9a9a9a")+'">'+m[1]+'</span>';
   var h='';
   h+='<div class="mt">'+x[2]+kb+'</div>';
   h+='<div class="kv"><span class="k">时间</span><span class="v">'+x[0].replace("-","月")+'日 '+x[1]+'</span></div>';
@@ -388,7 +405,25 @@ function openM(ix){
   document.getElementById("modal").innerHTML=h;
   document.getElementById("mask").classList.add("show");
 }
-function closeM(){ document.getElementById("mask").classList.remove("show"); }
+function closeM(){
+  document.getElementById("mask").classList.remove("show");
+  if(updateShowing){ updateShowing=false; try{ localStorage.setItem(K_SEEN,DATA_VERSION); }catch(e){} }
+}
+
+/* ---------- 更新提示弹窗（每个版本只弹一次） ---------- */
+var updateShowing=false;
+function openUpdate(){
+  var cl=(typeof CHANGELOG!=="undefined") && CHANGELOG[DATA_VERSION];
+  if(!cl) return;
+  var h='<div class="mclose" onclick="closeM()" title="关闭，不再提示">&times;</div>';
+  h+='<div class="mt">'+cl.title+'<span class="mb" style="background:#006C39">'+DATA_VERSION+'</span></div>';
+  h+='<div class="upd">'+cl.items.map(function(t){ return '<div class="li">'+t+'</div>'; }).join("")+'</div>';
+  h+='<div class="cheer">'+cl.cheer+'</div>';
+  h+='<div class="acts"><button class="on" onclick="closeM()">知道了，开始看</button></div>';
+  document.getElementById("modal").innerHTML=h;
+  document.getElementById("mask").classList.add("show");
+  updateShowing=true;
+}
 
 function openRefs(){
   var h='<div class="mt">全部信息源</div>'
@@ -434,6 +469,10 @@ document.addEventListener("keydown",function(e){
     if(TODAY>=WEEKS[i][0] && TODAY<=WEEKS[i][1]){ cur=i; Array.prototype.forEach.call(bar.children,function(c,idx){c.className=(idx===i?"on":"");}); break; }
   }
   render();
+  // 版本更新提示：只在新版本首次打开时弹一次
+  try{
+    if(localStorage.getItem(K_SEEN)!==DATA_VERSION) openUpdate();
+  }catch(e){}
 })();
 </script>
 </body>
