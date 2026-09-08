@@ -26,6 +26,9 @@ const SITES = [
   { name: '北航',   base: 'https://career.buaa.edu.cn', type: 'buaa', src: 'buaa' },
   { name: '北师大', base: 'https://career.bnu.edu.cn',  type: 'other', src: 'bnu' },
   { name: '农大',   base: 'https://scc.cau.edu.cn',     type: 'other', src: 'cau'  },
+  { name: '北科大', base: 'https://job.ustb.edu.cn',       type: 'other', src: 'ustb' },
+  { name: '北交大', base: 'https://job.bjtu.edu.cn',       type: 'other', src: 'bjtu' },
+  { name: '北林',   base: 'https://job.bjfu.edu.cn',       type: 'other', src: 'bjfu' },
 ];
 
 const KEYWORDS = [
@@ -55,6 +58,8 @@ async function fetchMonth(site, ym, referer) {
       if (res.status === 200) {
         const j = await res.json();
         if (j && j.state === 1 && Array.isArray(j.data)) return j.data;
+        if (j && j.state === 1) return [];  // 无数据的月份不返回 data 字段（如北科大/北林），当空月处理
+        if (j && j.state === 1) return [];  // 无数据的月份不返回 data 字段（如北科大/北林），当空月处理
         throw new Error('state=' + (j && j.state));
       }
       throw new Error('HTTP ' + res.status);
@@ -190,10 +195,8 @@ const CHEERS = [
   console.log('[站点状态]', perSite.map(s => `${s.name}:${s.ok ? '在线' + s.total + '条, 新增' + s.added : '失败'}`).join(' | '));
 
   if (!fresh.length) { console.log('本轮无新增，不推送'); return; }
-  if (perSite.some(s => !s.ok)) {
-    console.log('有站点失败，为避免数据残缺，本轮放弃推送');
-    process.exit(2);
-  }
+  const failedSites = perSite.filter(s => !s.ok).map(s => s.name);
+  if (failedSites.length) console.log('注意：' + failedSites.join('、') + '本轮抓取失败已跳过，下轮自动补查');
 
   /* ---- 版本号：V{M}.{D}.{当日第几次} ---- */
   const verPrefix = `V${MO + 1}.${now.getUTCDate()}.`;
