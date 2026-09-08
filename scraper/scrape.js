@@ -176,6 +176,7 @@ const CHEERS = [
         const title = (it.title || '').trim().replace(/["\\]/g, '');
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !time || !title) continue;
         if (/讲座|公开课|大赛|比赛|考试|职业规划|简历门诊|辅导|课程|分享会/.test(title)) continue; // 非招聘活动
+        if (/空中|空宣|直播|线上|云聘|网络双选/.test(title + (it.fairTypeName || '') + (it.field || ''))) continue; // 线上场次不收（2026-09-08 用户决定：能到场才是信息）
         if (date < today) continue;
         const mmdd = date.slice(5);
         if (seen(mmdd, time, title, (it.field || ''))) continue;
