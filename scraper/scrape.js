@@ -260,7 +260,7 @@ const CHEERS = [
       index.get(m2[1]).push({ time: m2[2], title: m2[3], place: m2[4] });
     }
     const still = fresh.filter(f => {
-      const raw = f.line.match(/^"(\d{2}-\d{2})","([^"]*)","([^"]*)","([^"]*)"/);
+      const raw = f.line.match(/^\["(\d{2}-\d{2})","([^"]*)","([^"]*)","([^"]*)"/); // 行以[开头，^后必须有\[（WorkBuddy 诊断的真正根因）
       return raw && !seen(raw[1], raw[2], raw[3], raw[4]); // raw=null（行格式异常）时跳过而非崩溃
     });
     if (!still.length) { console.log('pull 后发现新增均已被他端收录，不推送'); return; }
