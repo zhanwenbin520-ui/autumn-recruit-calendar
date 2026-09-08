@@ -226,7 +226,9 @@ const CHEERS = [
     return `// ============ ${pad2(mon)}/${pad2(d)} 周${wd}（自动抓取） ============`;
   };
   const insertBlock = (src, dayMap) => {
-    const blocks = Object.keys(dayMap).sort().map(mm => dayComment(mm) + '\n' + dayMap[mm].join(',\n')).join('\n');
+    /* 天块之间必须有逗号：块内行尾无逗号，join('\n') 会让相邻 ["MM-DD",...] 行
+       解析成成员访问链导致 events.js 语法损坏（2026-09-08 全页空白事故根因） */
+    const blocks = Object.keys(dayMap).sort().map(mm => dayComment(mm) + '\n' + dayMap[mm].join(',\n')).join(',\n');
     return src
       .replace(/,\s*\n\];/, '\n];')                      // 规范化：去掉可能已存在的数组尾逗号
       .replace('var CHANGELOG = {\n', 'var CHANGELOG = {\n' + changelog)
@@ -273,6 +275,16 @@ const CHEERS = [
     console.log(`pull 后实际新增 ${still.length} 场`);
   } else {
     fs.writeFileSync(EV, insertBlock(latest, byDay));
+  }
+
+  /* 写盘自检：events.js 必须可解析、可执行且 D 为非空数组，否则回滚并放弃推送
+     （2026-09-08 事故教训：语法损坏的 events.js 一旦上线，看板全页空白） */
+  try {
+    new Function(fs.readFileSync(EV, 'utf8'))();
+  } catch (e) {
+    console.log('events.js 自检失败，回滚并放弃推送：', e.message);
+    try { git('git checkout -- events.js'); } catch (_) {}
+    process.exit(2);
   }
 
   try {
