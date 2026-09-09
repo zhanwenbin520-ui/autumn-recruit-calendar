@@ -201,15 +201,18 @@ const CHEERS = [
 
   /* ---- 版本号：V{M}.{D}.{当日第几次} ---- */
   const verPrefix = `V${MO + 1}.${now.getUTCDate()}.`;
-  let n = 0;
-  const verRe = /"(V\d+\.\d+\.\d+)"/g;
-  let vm;
-  while ((vm = verRe.exec(evSrc))) if (vm[1].startsWith(verPrefix)) n = Math.max(n, parseInt(vm[1].split('.')[2], 10));
-  const VER = verPrefix + (n + 1);
+  const computeVer = (src) => {
+    let n = 0;
+    const verRe = /"(V\d+\.\d+\.\d+)"/g;
+    let vm;
+    while ((vm = verRe.exec(src))) if (vm[1].startsWith(verPrefix)) n = Math.max(n, parseInt(vm[1].split('.')[2], 10));
+    return verPrefix + (n + 1);
+  };
+  let VER = computeVer(evSrc);
 
   /* CHANGELOG：按校汇总，不逐条罗列 */
   const summary = perSite.filter(s => s.added > 0).map(s => `补 <b>${s.name} ${s.added} 场</b>`);
-  const changelog = `  "${VER}": {
+  const buildChangelog = (ver) => `  "${ver}": {
     title: "本次更新：服务器自动抓取补 ${fresh.length} 场",
     items: [
       "${summary.join('、')}（时间地点详见日历，来源已标注）",
@@ -218,6 +221,7 @@ const CHEERS = [
     cheer: "${CHEERS[Math.floor(Math.random() * CHEERS.length)]}"
   },
 `;
+  let changelog = buildChangelog(VER);
 
   const byDay = {};
   fresh.forEach(f => { (byDay[f.mmdd] = byDay[f.mmdd] || []).push(f.line); });
@@ -255,6 +259,11 @@ const CHEERS = [
     console.log('git pull 失败，本轮放弃：', e.message);
     process.exit(2);
   }
+
+  /* 撞号保护：版本号必须基于 pull 后的最新文件重算——evSrc 是拉取前的旧文件，
+     本机手工推送过新版本时会算出回退的版本号（2026-09-09 V9.9.1 撞号回退事故根因） */
+  VER = computeVer(latest);
+  changelog = buildChangelog(VER);
 
   if (latest !== evSrc) {
     /* 用远端最新文件重建索引，复用同一套去重逻辑 */
