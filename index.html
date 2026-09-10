@@ -36,6 +36,29 @@
   button:disabled:hover{border-color:#d5dbd3;color:#4a4a4a;background:#fff}
   .spacer{flex:1}
   .cnt{font-size:12px;color:#A13F0B;font-weight:600}
+  #q{
+    font-family:inherit;font-size:12.5px;padding:6px 10px;border-radius:7px;outline:none;
+    border:1px solid #d5dbd3;background:#fff;color:#3f3f3f;width:215px;transition:.13s;
+  }
+  #q:focus{border-color:#006C39;box-shadow:0 0 0 2px rgba(0,108,57,.08)}
+  #q::placeholder{color:#b6bdb4}
+
+  /* 搜索结果列表 */
+  .sres{display:flex;flex-direction:column;gap:10px}
+  .shead{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    background:#fff;border:1px solid #e3e7e2;border-radius:9px;padding:10px 13px;
+    font-size:12.5px;color:#3f3f3f;
+  }
+  .shead b{color:#006C39}
+  .sg{background:#fff;border:1px solid #e3e7e2;border-radius:9px;overflow:hidden}
+  .sg .ghead{padding:7px 11px;background:#eef2ed;border-bottom:1px solid #e3e7e2;font-size:12px;color:#4a4a4a}
+  .sg .ghead b{color:#006C39;font-size:13.5px}
+  .sg.today .ghead{background:#fdf1e9}
+  .sg.today .ghead b{color:#A13F0B}
+  .sg .gbody{padding:6px;display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:6px}
+  .sg .gbody .ev{background:#fff}
+  .sg .gbody .empty{grid-column:1/-1}
 
   .legend{display:flex;flex-wrap:wrap;gap:13px;font-size:11.5px;color:#666;margin-bottom:11px;padding-left:2px}
   .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
@@ -177,6 +200,8 @@
     <button id="f-out" onclick="setF('out')">清华北大北航</button>
     <button id="f-city" onclick="setF('city')">全市开放</button>
   </div>
+  <span class="lbl" style="margin-left:9px">搜索</span>
+  <input id="q" type="search" placeholder="企业 / 学校 / 关键词，空格分隔" autocomplete="off">
   <div class="spacer"></div>
   <span class="cnt" id="cnt"></span>
   <button id="uBtn" onclick="undo()" disabled title="快捷键 Ctrl+Z">↩ 撤销</button>
@@ -228,7 +253,7 @@ var MM={bit:["b-bit","北理工"],thu:["b-thu","清华"],pku:["b-pku","北大"],
 var MC={bit:"#006C39",thu:"#660874",pku:"#94070A",buaa:"#1a5490",other:"#9a9a9a",city:"#0E7C7B"};
 var LV={1:["必去","#006C39"],2:["优先","#A13F0B"],3:["可去","#8aab96"],4:["可弃","#9aa19c"]};
 
-var cur=0, filter="all";
+var cur=0, filter="all", Q="";
 var K_H="zwb_cal_hidden_v2", K_U="zwb_cal_undo_v2", K_SEEN="zwb_cal_seen_ver";
 var hidden={}, undoStack=[];
 
@@ -267,7 +292,29 @@ function todayStr(){
 }
 var TODAY=todayStr();
 
+/* ---------- 搜索 ---------- */
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function passF(x){
+  if(filter==="key" && x[4]>2) return false;
+  if(filter==="bit" && x[5]!=="bit") return false;
+  if(filter==="out" && ["thu","pku","buaa"].indexOf(x[5])<0) return false;
+  if(filter==="city" && x[5]!=="city") return false;
+  return true;
+}
+/* 匹配范围：单位/活动 + 地点 + 备注 + 学校分类标签；空格分隔多关键词取交集 */
+function matchQ(x){
+  if(!Q) return true;
+  var hay=(x[2]+" "+x[3]+" "+(x[6]||"")+" "+((MM[x[5]]||["",""])[1])).toLowerCase();
+  return Q.split(/\s+/).every(function(kw){ return hay.indexOf(kw)>=0; });
+}
+function dowOf(dstr){
+  var p=dstr.split("-");
+  var wd=new Date(2026, parseInt(p[0],10)-1, parseInt(p[1],10)).getDay();
+  return ["周日","周一","周二","周三","周四","周五","周六"][wd];
+}
+
 function render(){
+  if(Q){ renderSearch(); return; }
   var wk=WEEKS[cur], html="";
   for(var i=0;i<7;i++){
     var d=dayOf(wk[0],i);
@@ -277,11 +324,7 @@ function render(){
     var vis=items.filter(function(ix){
       var x=D[ix];
       if(hidden[KEYS[ix]]) return false;
-      if(filter==="key" && x[4]>2) return false;
-      if(filter==="bit" && x[5]!=="bit") return false;
-      if(filter==="out" && ["thu","pku","buaa"].indexOf(x[5])<0) return false;
-      if(filter==="city" && x[5]!=="city") return false;
-      return true;
+      return passF(x) && matchQ(x);
     });
     // 每天内按开始时间排序（"待定"/"日期内"等无具体时间的排最后）
     vis.sort(function(a,b){
@@ -289,22 +332,7 @@ function render(){
       return tk(a)-tk(b);
     });
     var cards='<div class="empty">—</div>';
-    if(vis.length){
-      cards="";
-      vis.forEach(function(ix){
-        var x=D[ix], m=MM[x[5]]||["b-other","其他"], s=srcOf(x);
-        var badge = '<span class="badge '+m[0]+'">'+m[1]+'</span>';
-        var kb = x[7] ? '<span class="badge b-key">重磅</span>' : '';
-        var note = x[6] ? '<div class="n">'+linkify(x[6])+'</div>' : '';
-        var sl = s.u ? '<a class="sl" href="'+s.u+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">来源：'+s.n+' ↗</a>' : '';
-        cards += '<div class="ev l'+x[4]+'" data-i="'+ix+'" onclick="openM('+ix+')">'
-          + '<div class="x" onclick="event.stopPropagation();hide('+ix+')" title="叉掉">&times;</div>'
-          + '<div class="t">'+x[1]+'</div>'
-          + '<div class="o">'+x[2]+badge+kb+'</div>'
-          + '<div class="p">'+x[3]+'</div>'+note+sl
-          + '<div class="hint">点击看完整详情 ↗</div></div>';
-      });
-    }
+    if(vis.length) cards=vis.map(cardHTML).join("");
     html += '<div class="col'+(d===TODAY?" today":"")+'"><div class="chead"><div class="dow">'+DOW[i]+(d===TODAY?" · 今天":"")+'</div>'
       + '<div class="dnum">'+(mo==="10"?"10/":mo==="11"?"11/":"")+dn+'</div>'
       + '<div class="dnote">'+vis.length+' 场</div></div>'
@@ -312,6 +340,57 @@ function render(){
   }
   document.getElementById("cal").innerHTML=html;
   updBtns();
+}
+
+function cardHTML(ix){
+  var x=D[ix], m=MM[x[5]]||["b-other","其他"], s=srcOf(x);
+  var badge = '<span class="badge '+m[0]+'">'+m[1]+'</span>';
+  var kb = x[7] ? '<span class="badge b-key">重磅</span>' : '';
+  var note = x[6] ? '<div class="n">'+linkify(x[6])+'</div>' : '';
+  var sl = s.u ? '<a class="sl" href="'+s.u+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">来源：'+s.n+' ↗</a>' : '';
+  return '<div class="ev l'+x[4]+'" data-i="'+ix+'" onclick="openM('+ix+')">'
+    + '<div class="x" onclick="event.stopPropagation();hide('+ix+')" title="叉掉">&times;</div>'
+    + '<div class="t">'+x[1]+'</div>'
+    + '<div class="o">'+x[2]+badge+kb+'</div>'
+    + '<div class="p">'+x[3]+'</div>'+note+sl
+    + '<div class="hint">点击看完整详情 ↗</div></div>';
+}
+
+/* 搜索模式：跨全部周次的平铺结果，按日期分组 */
+function renderSearch(){
+  var vis=[];
+  D.forEach(function(x,ix){
+    if(hidden[KEYS[ix]]) return;
+    if(!passF(x) || !matchQ(x)) return;
+    vis.push(ix);
+  });
+  vis.sort(function(a,b){
+    function tk(ix){ var m=D[ix][1].match(/(\d{1,2}):(\d{2})/); return m ? (+m[1])*60+(+m[2]) : 1500; }
+    var x=D[a],y=D[b];
+    return x[0]===y[0] ? tk(a)-tk(b) : (x[0]<y[0]?-1:1);
+  });
+  var groups={};
+  vis.forEach(function(ix){ var d=D[ix][0]; (groups[d]=groups[d]||[]).push(ix); });
+  var html='<div class="sres"><div class="shead">搜索“<b>'+esc(Q.replace(/\s+/g," "))+'</b>”：匹配 <b>'+vis.length+'</b> 场（全部周次，已套用上方筛选）'
+    + '<button onclick="clearQ()">清除搜索</button></div>';
+  if(!vis.length){
+    html+='<div class="sg"><div class="gbody"><div class="empty">没有匹配的场次，换个关键词试试——比如公司简称（华为 / 中核）、学校名（北航）、或“双选会”</div></div></div>';
+  } else {
+    Object.keys(groups).sort().forEach(function(d){
+      var list=groups[d], isToday=(d===TODAY), p=d.split("-");
+      html+='<div class="sg'+(isToday?" today":"")+'"><div class="ghead"><b>'+p[0]+'月'+p[1]+'日</b> '+dowOf(d)+(isToday?" · 今天":"")+' · '+list.length+' 场</div>'
+        + '<div class="gbody">'+list.map(cardHTML).join("")+'</div></div>';
+    });
+  }
+  html+='</div>';
+  document.getElementById("cal").innerHTML=html;
+  updBtns();
+}
+function clearQ(){
+  var el=document.getElementById("q");
+  if(el) el.value="";
+  Q="";
+  render();
 }
 
 function updBtns(){
@@ -488,10 +567,17 @@ function setW(i){
 document.addEventListener("keydown",function(e){
   if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="z"){ e.preventDefault(); undo(); }
   if(e.key==="Escape"){ closeM(); }
+  if(e.key==="/" && document.activeElement && document.activeElement.tagName!=="INPUT"){
+    e.preventDefault();
+    var qe=document.getElementById("q");
+    if(qe) qe.focus();
+  }
 });
 
 (function(){
   document.getElementById("dv").textContent = DATA_VERSION;
+  var qEl=document.getElementById("q");
+  qEl.addEventListener("input",function(){ Q=this.value.trim().toLowerCase(); render(); });
   var bar=document.getElementById("wkbar");
   WEEKS.forEach(function(w,i){
     var b=document.createElement("button");
