@@ -178,6 +178,27 @@
   footer b{color:#A13F0B}
   footer a{color:#006C39}
   .quote{margin-top:14px;padding:11px 16px;background:#f2f7f3;border-left:3px solid #006C39;border-radius:0 8px 8px 0;font-size:13px;color:#2f5e42;line-height:1.8;font-style:italic}
+
+  /* ---------- 手机/窄屏：取消每列独立滚动，整页自然滚动 ----------
+     每列各自 overflow 滚动在触屏上会“滚动链”串列（滑周四、周三跟着动），
+     内容少的列（周五/周六）没有滚动余地则完全滑不动；窄屏一律堆叠展平 */
+  @media (max-width:860px){
+    .cal{grid-template-columns:1fr;gap:10px}
+    .cbody{max-height:none;overflow:visible;min-height:0}
+    .ev{font-size:13px;padding:7px 22px 7px 9px}
+    .ev .t{font-size:12px}
+    .ev .o{font-size:13px;line-height:1.45}
+    .ev .p{font-size:11.5px}
+    /* 触屏没有 hover：备注与来源链接直接展开显示 */
+    .ev .n,.ev .sl{display:block;font-size:11.5px}
+    .ev .hint{display:none}
+    .sg .gbody{grid-template-columns:1fr}
+    h1{font-size:19px}
+    .bar{padding:9px 10px;gap:7px}
+    button{padding:8px 12px;font-size:13px}
+    #q{flex:1 1 150px;width:auto}
+    .legend{gap:9px;font-size:11px}
+  }
 </style>
 </head>
 <body>
