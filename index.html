@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>秋招活动日历 · 2026 秋招季</title>
+<script>try{if((window.matchMedia&&window.matchMedia('(pointer: coarse)').matches)||('ontouchstart' in window))document.documentElement.className+=' touch';}catch(e){}</script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{
@@ -199,6 +200,14 @@
     #q{flex:1 1 150px;width:auto}
     .legend{gap:9px;font-size:11px}
   }
+
+  /* 触屏设备即使视口较宽（平板/桌面模式/双指缩放）也强制展平布局：
+     列内独立滚动在触屏上必然串列或失灵，索性不存在 */
+  html.touch .cal{grid-template-columns:1fr;gap:10px}
+  html.touch .cbody{max-height:none;overflow:visible;min-height:0}
+  html.touch .ev .n,html.touch .ev .sl{display:block;font-size:11.5px}
+  html.touch .ev .hint{display:none}
+  html.touch .sg .gbody{grid-template-columns:1fr}
 </style>
 </head>
 <body>
@@ -335,31 +344,48 @@ function dowOf(dstr){
 }
 
 function render(){
-  if(Q){ renderSearch(); return; }
-  var wk=WEEKS[cur], html="";
-  for(var i=0;i<7;i++){
-    var d=dayOf(wk[0],i);
-    var dn=parseInt(d.split("-")[1],10), mo=d.split("-")[0];
-    var items=[];
-    D.forEach(function(x,ix){ if(x[0]===d) items.push(ix); });
-    var vis=items.filter(function(ix){
-      var x=D[ix];
-      if(hidden[KEYS[ix]]) return false;
-      return passF(x) && matchQ(x);
-    });
-    // 每天内按开始时间排序（"待定"/"日期内"等无具体时间的排最后）
-    vis.sort(function(a,b){
-      function tk(ix){ var m=D[ix][1].match(/(\d{1,2}):(\d{2})/); return m ? (+m[1])*60+(+m[2]) : 1500; }
-      return tk(a)-tk(b);
-    });
-    var cards='<div class="empty">—</div>';
-    if(vis.length) cards=vis.map(cardHTML).join("");
-    html += '<div class="col'+(d===TODAY?" today":"")+'"><div class="chead"><div class="dow">'+DOW[i]+(d===TODAY?" · 今天":"")+'</div>'
-      + '<div class="dnum">'+(mo==="10"?"10/":mo==="11"?"11/":"")+dn+'</div>'
-      + '<div class="dnote">'+vis.length+' 场</div></div>'
-      + '<div class="cbody">'+cards+'</div></div>';
+  /* 保留滚动位置：叉掉/撤销/恢复后不跳回顶部（整页 + 桌面端每列内部各自记忆） */
+  var pageY=window.scrollY||window.pageYOffset||0;
+  var colScroll={};
+  Array.prototype.forEach.call(document.querySelectorAll('.col'),function(c){
+    var d=c.getAttribute('data-d'), b=c.querySelector('.cbody');
+    if(d && b) colScroll[d]=b.scrollTop;
+  });
+
+  if(Q){
+    renderSearch();
+  }else{
+    var wk=WEEKS[cur], html="";
+    for(var i=0;i<7;i++){
+      var d=dayOf(wk[0],i);
+      var dn=parseInt(d.split("-")[1],10), mo=d.split("-")[0];
+      var items=[];
+      D.forEach(function(x,ix){ if(x[0]===d) items.push(ix); });
+      var vis=items.filter(function(ix){
+        var x=D[ix];
+        if(hidden[KEYS[ix]]) return false;
+        return passF(x) && matchQ(x);
+      });
+      // 每天内按开始时间排序（"待定"/"日期内"等无具体时间的排最后）
+      vis.sort(function(a,b){
+        function tk(ix){ var m=D[ix][1].match(/(\d{1,2}):(\d{2})/); return m ? (+m[1])*60+(+m[2]) : 1500; }
+        return tk(a)-tk(b);
+      });
+      var cards='<div class="empty">—</div>';
+      if(vis.length) cards=vis.map(cardHTML).join("");
+      html += '<div class="col'+(d===TODAY?" today":"")+'" data-d="'+d+'"><div class="chead"><div class="dow">'+DOW[i]+(d===TODAY?" · 今天":"")+'</div>'
+        + '<div class="dnum">'+(mo==="10"?"10/":mo==="11"?"11/":"")+dn+'</div>'
+        + '<div class="dnote">'+vis.length+' 场</div></div>'
+        + '<div class="cbody">'+cards+'</div></div>';
+    }
+    document.getElementById("cal").innerHTML=html;
   }
-  document.getElementById("cal").innerHTML=html;
+
+  window.scrollTo(0,pageY);
+  Array.prototype.forEach.call(document.querySelectorAll('.col'),function(c){
+    var d=c.getAttribute('data-d');
+    if(d && colScroll[d]!==undefined){ var b=c.querySelector('.cbody'); if(b) b.scrollTop=colScroll[d]; }
+  });
   updBtns();
 }
 
@@ -405,7 +431,6 @@ function renderSearch(){
   }
   html+='</div>';
   document.getElementById("cal").innerHTML=html;
-  updBtns();
 }
 function clearQ(){
   var el=document.getElementById("q");
