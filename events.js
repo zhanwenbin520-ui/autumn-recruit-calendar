@@ -12,10 +12,19 @@
    ============================================================ */
 
 /* 版本号规则：V{月}.{日}.{当日第几次更新}，如 9 月 7 日第 2 次更新 = V9.7.2，次日第 1 次 = V9.8.1 */
-var DATA_VERSION = "V9.14.3";
+var DATA_VERSION = "V9.14.4";
 
 /* 更新日志：key 必须等于某个版本的 DATA_VERSION，打开时只弹一次（存本机） */
 var CHANGELOG = {
+  "V9.14.4": {
+    title: "本次更新：对接清华就业网接口，补 86 场、修 9 处",
+    items: [
+      "补 <b>清华专场 86 场</b>（9/14-9/21），时间地点精确到教室，每场附官网详情链接",
+      "修正 <b>9 场</b>原「时间待定」条目：vivo、上海中学、中建八局、军事航天部队、95861部队、就在武汉、万向集团、国防科大博士专场、五院系联合专场，均已按官网接口填入精确时间地点",
+      "对口亮点：怀柔实验室（能源）、中核集团、南网数字/共享、哈电集团、电力顾问集团西北院、国开行、北京市公安局招录、直招军警官等清华场次在列"
+    ],
+    cheer: "多走一场，多一分底气。跨校的路也是前程的一部分。"
+  },
   "V9.14.3": {
     title: "本次更新：服务器自动抓取补 4 场",
     items: [
@@ -782,7 +791,7 @@ var D = [
 ["09-19","14:00","集成电路学院2027届双选会","清华祖龙广场",3,"thu","材料可关注化合物半导体、封装方向",0,"thu"],
 ["09-19","待定","中国航空工业集团","北大",3,"pku","北理工9/7已办",0,"pku"],
 // ============ 9/20 周日 ============
-["09-20","待定","机械·工业工程·材料·化学·化工五院系联合专场","清华祖龙广场",1,"thu","五个院系联合，材料最对口的一场，强烈建议去",1,"thu"],
+    ["09-20","09:00","机械·工业工程·材料·化学·化工五院系联合专场","清华·职业发展中心祖龙广场",1,"thu","接口已确认时间地点；含材料院系，与用户专业相关",1,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=11227365"],
 ["09-20","09:30","成都新易盛","唯实报告厅",4,"bit","",0,"bit"],
 ["09-20","13:30","东阳光集团","唯实报告厅",4,"bit","",0,"bit"],
 ["09-20","16:00","杰瑞集团","中教425",4,"bit","",0,"bit"],
@@ -1796,14 +1805,14 @@ var D = [
 // ============ 09/15 周二（自动抓取） ============
 ["09-15","10:00","2027年湖北省定向选调生（选聘生）招录宣讲会","学院路校区学院路校区新主楼第八会议室",3,"buaa","线下宣讲会（服务器自动抓取）",0,"buaa"],
 // ============ 清华官网月历（人工核补 2026-09-12） ============
-["09-14","待定","vivo2027届秋季校园招聘宣讲会（清华场）","清华（具体时间地点见官网月历弹层，待确认）",3,"thu","清华官网9月月历在列；北大9/14 19:00也有vivo场",0,"thu2"],
-["09-15","待定","上海市上海中学2027年北京地区招聘宣讲会（清华场）","清华（待确认）",4,"thu","教师招聘岗，与双碳方向无关；清华官网9月月历在列（V9.12.3 补漏，此前月历8条只入了7条）",0,"thu2"],
-["09-16","待定","中建八局2027届秋季校园招聘（清华场）","清华（待确认）",3,"thu","清华官网9月月历在列；北交大9/14有同单位场",0,"thu2"],
-["09-17","待定","军事航天部队2026年秋季校园招聘宣讲会（清华场）","清华（待确认）",3,"thu","清华官网9月月历在列；军队招录体制内路径；北航9/16、北大9/18也有同部队场",0,"thu2"],
-["09-18","待定","中国人民解放军95861部队人才引进（清华场）","清华（待确认）",3,"thu","清华官网9月月历列于9/18；⚠️官网详情页挂的是6/17旧场时间，具体时间地点待确认；北理9/15、北大9/16也有场",0,"thu2"],
-["09-19","待定","“就在武汉 创赢未来”校园引才招聘会（清华站）","清华（待确认）",3,"thu","武汉城市引才双选会；外校准入待确认",0,"thu2"],
-["09-20","待定","万向集团2027届秋季校园招聘宣讲会（清华场）","清华（待确认）",3,"thu","清华官网9月月历列于9/20；北大9/21 19:00也有场，疑为同一行程两站",0,"thu2"],
-["09-22","待定","国防科技大学2026年清华大学博士专场宣讲会","清华（待确认）",4,"thu","偏博士；北理9/24及北航/北师大/北大9/21-23也有同系列场",0,"thu2"],
+    ["09-14","14:00","vivo2027届秋季校园招聘宣讲会（清华场）","清华·职业发展中心海博思创厅",3,"thu","清华官网9月月历在列，接口已确认时间地点；北大9/14 19:00也有vivo场",0,"thu2","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264661631"],
+    ["09-15","09:30","上海市上海中学2027年北京地区招聘宣讲会（清华场）","清华·职业发展中心东风汽车厅",4,"thu","教师招聘岗，与双碳方向无关；接口已确认时间地点",0,"thu2","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263535622"],
+    ["09-16","09:30","中建八局2027届秋季校园招聘（清华场）","清华·职业发展中心浪潮厅",3,"thu","接口已确认时间地点；北交大9/14有同单位场",0,"thu2","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261680139"],
+    ["09-17","09:30","军事航天部队2026年秋季校园招聘宣讲会（清华场）","清华·职业发展中心浪潮厅",3,"thu","接口已确认时间地点；军队招录体制内路径；北航9/16、北大9/18也有场",0,"thu2","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264754504"],
+    ["09-18","09:30","中国人民解放军95861部队人才引进（清华场）","清华·职业发展中心东风汽车厅",3,"thu","官网接口确认9:30-11:30（此前详情页挂的6/17旧场时间已作废）；北理9/15、北大9/16也有场",0,"thu2","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=265750154"],
+    ["09-19","09:30","“就在武汉 创赢未来”校园引才招聘会（清华站）","清华·职业发展中心祖龙广场",3,"thu","武汉城市引才双选会；接口已确认时间地点；外校准入以官网为准",0,"thu2","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261864955"],
+    ["09-20","14:00","万向集团2027届秋季校园招聘宣讲会（清华场）","清华·职业发展中心浪潮厅",3,"thu","接口已确认时间地点；北大9/21 19:00也有场",0,"thu2","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263166949"],
+    ["09-22","09:30","国防科技大学2026年清华大学博士专场宣讲会","清华·职业发展中心美团创新空间",4,"thu","接口已确认时间地点；博士专场，硕士以官网为准",0,"thu2","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=265058065"],
 // ============ 国科大 job.ucas.edu.cn 10月场次人工核补（V9.12.5，上轮遗留本源增量，服务器未覆盖该源） ============
 ["10-09","19:00","成都海集科技2027届校园招聘宣讲会（国科大场）","国科大教学楼N306",4,"other","国科大官网10月新上架（人工核补）",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=4da8500c67244378bdaf8abb1c95c20c"],
 ["10-09","19:00","中国电科第二十八研究所（南京电子工程研究所）2027届校园招聘宣讲会（国科大场）","国科大中关村教学楼一层S104",3,"other","军工电子骨干院所，岗位属地南京；电科系北理9/16、9/17有14所场",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=6b35d67bbf974012a22909d4d1b22135"],
@@ -1901,5 +1910,93 @@ var D = [
 // ============ 10/12 周一（自动抓取） ============
 ["10-12","18:30","中国电子科技集团公司第三十三研究所 2026-2027年校园招聘宣讲会","沙河校区J5-105教室",2,"buaa","线下宣讲会（服务器自动抓取）",1,"buaa"],
 // ============ 10/14 周三（自动抓取） ============
-["10-14","16:00","珠海格力电器2027届秋季校园招聘","唯实报告厅",3,"bit","校内招聘会（服务器自动抓取）",0,"bit"]
+["10-14","16:00","珠海格力电器2027届秋季校园招聘","唯实报告厅",3,"bit","校内招聘会（服务器自动抓取）",0,"bit"],
+
+// ============ 清华就业网旧系统接口 9/14-9/30 专场明细（V9.14.4 人工核补） ============
+    ["09-14","14:00","中国东方资产管理股份有限公司-清华大学专场宣讲会","清华·职业发展中心东风汽车厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267335622"],
+    ["09-14","14:00","中辉激光27届秋季校园招聘","清华·职业发展中心天一厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267958952"],
+    ["09-14","15:00","2026-2027年度直接选拔招录军（警）官-清华大学专场宣讲会","清华·职业发展中心华为多功能厅",2,"thu","军队直接选拔招录，体制内路径；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263553497"],
+    ["09-14","19:00","深圳市特区建工集团有限公司2027 届校园招聘","清华·职业发展中心海博思创厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269634078"],
+    ["09-14","19:00","中国农业银行总行2027年度校园招聘宣讲会","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=262020610"],
+    ["09-14","19:00","中兴通讯2027届校园招聘宣讲会","清华·职业发展中心天一厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264178296"],
+    ["09-14","19:00","寻找爱“迪”生—比亚迪2027届春季校园招聘","清华·职业发展中心浪潮厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=268863982"],
+    ["09-14","19:00","Li想世界不设限·宁德新能源(ATL)2027全球校招","清华·职业发展中心东风汽车厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=262151764"],
+    ["09-14","19:00","中国银河证券2027校园招聘宣讲会","清华·职业发展中心美团创新空间",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264028051"],
+    ["09-15","09:30","中国航空发动机集团有限公司2027届校园招聘","清华·职业发展中心华为多功能厅",2,"thu","央企军工，航空发动机；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269651056"],
+    ["09-15","10:00","北京市公安局招录宣讲会","清华·职业发展中心海博思创厅",2,"thu","公安招录，北京体制内路径；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260570291"],
+    ["09-15","14:00","信息支援部队2026年直招军官专场宣讲+双选会","清华·职业发展中心美团创新空间",2,"thu","军队直招军官+双选，体制内路径；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266756215"],
+    ["09-15","14:00","岚图汽车2027届校园招聘","清华·职业发展中心东风汽车厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266294571"],
+    ["09-15","14:00","睿琪软件清华大学专场宣讲会","清华·职业发展中心天一厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=262974430"],
+    ["09-15","14:00","“天辽地宁聚英才 振兴突破创未来”辽宁重点企事业单位清华大学招聘会","清华·职业发展中心祖龙广场",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269528664"],
+    ["09-15","14:00","乾元国家实验室2027届校园招聘宣讲会","清华·职业发展中心海博思创厅",2,"thu","国家实验室，科研体制路径；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269606663"],
+    ["09-15","15:00","“天辽地宁聚英才 振兴突破创未来”主题宣讲会","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=265964662"],
+    ["09-15","15:00","锦Show长安-长安汽车2027全球校园招聘-清华大学宣讲会","清华·主楼接待厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261627212"],
+    ["09-15","19:00","OPPO27届秋招宣讲会","清华·职业发展中心天一厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260810125"],
+    ["09-15","19:00","易方达基金2027校园招聘","清华·职业发展中心东风汽车厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261421467"],
+    ["09-15","19:00","中国银行股份有限公司2027年全球校园招聘","清华·职业发展中心浪潮厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260237356"],
+    ["09-15","19:00","中冶赛迪2027届校园招聘宣讲会","清华·职业发展中心美团创新空间",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267723226"],
+    ["09-15","19:00","航空工业成飞2027届校园招聘宣讲会","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264563303"],
+    ["09-15","19:00","地平线2027届秋季校园线下沙龙","清华·职业发展中心海博思创厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269271509"],
+    ["09-16","10:00","青春耀向“上”—上饶银行2026年秋季招聘宣讲会","清华·职业发展中心海博思创厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267353906"],
+    ["09-16","10:00","2027年湖北省定向选调生（选聘生）招录宣讲会","清华·职业发展中心美团创新空间",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263954255"],
+    ["09-16","14:00","南网数字集团2027年校园招聘宣讲会","清华·职业发展中心昆山国际会议厅",2,"thu","南方电网数字化，能源双碳对口；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=262380830"],
+    ["09-16","14:00","小米2027届全球校园招聘","清华·职业发展中心美团创新空间",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=268890380"],
+    ["09-16","14:00","中国核工业集团有限公司2027届清华专场招聘会","清华·职业发展中心华为多功能厅",2,"thu","重磅央企核电，双碳对口；继北理9/21、北航9/22后清华站；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264147641"],
+    ["09-16","14:00","曦诺未来2027届校园招聘","清华·职业发展中心东风汽车厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264620661"],
+    ["09-16","14:00","DJI 大疆 2027 校园招聘清华大学宣讲会","清华·职业发展中心浪潮厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267860373"],
+    ["09-16","19:00","“梦想靠岸”招商银行总行、分行及子公司2027校园招聘","清华·职业发展中心浪潮厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263898704"],
+    ["09-16","19:00","九坤投资2026清华大学宣讲会","清华·职业发展中心美团创新空间",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266318567"],
+    ["09-16","19:00","无锡市创新投资集团有限公司2027届校园招聘","清华·职业发展中心东风汽车厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260690918"],
+    ["09-16","19:00","北京应用物理与计算数学研究所2027届校园招聘宣讲会","清华·职业发展中心海博思创厅",2,"thu","中物院系统军工科研所；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260993278"],
+    ["09-16","19:00","青囊X锐，广药聘U（2.0）","清华·职业发展中心昆山国际会议厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=265248121"],
+    ["09-16","09:00","2026年“校园苏州日”清华大学专场宣讲会","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=265947852"],
+    ["09-16","09:00","苏州高层次人才双选会","清华·职业发展中心祖龙广场",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264297608"],
+    ["09-16","09:00","大模型评测工程师-Mindflow直投专场投递入口","清华·职业发展中心天一厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261241518"],
+    ["09-17","09:30","哈电集团哈尔滨电气动力装备有限公司2027届校园招聘","清华·职业发展中心海博思创厅",2,"thu","央企能源装备，双碳相关；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269050680"],
+    ["09-17","10:00","航空工业成都飞机设计研究所2027届校园招聘","清华·职业发展中心天一厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=268534182"],
+    ["09-17","10:00","宜昌市“招才兴业”计划城市推介暨“千企百校行”清华大学专场宣讲会","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264820441"],
+    ["09-17","14:00","中国电子2027届校园招聘","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269726785"],
+    ["09-17","14:00","国家开发银行2027年校园招聘","清华·职业发展中心浪潮厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261195847"],
+    ["09-17","14:00","中关村实验室2027届毕业生秋招宣讲会","清华·职业发展中心东风汽车厅",2,"thu","国家实验室，科研体制路径；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269569931"],
+    ["09-17","14:00","中国电力工程顾问集团西北电力设计院有限公司2027年应届高校毕业生秋季校园招聘宣讲会","清华·职业发展中心海博思创厅",2,"thu","电力设计央企，能源双碳对口；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263349815"],
+    ["09-17","14:00","上海市嘉定区2027年度优秀大学毕业生储备计划现场推介会","清华·职业发展中心天一厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260078094"],
+    ["09-17","19:00","“芯”向AI，5S聚英才 苏纳2027届全球校园招聘","清华·职业发展中心海博思创厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263512718"],
+    ["09-17","19:00","美团2027届校园招聘宣讲会","清华·职业发展中心美团创新空间",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269672898"],
+    ["09-17","19:00","中国建筑2027届校园招聘","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=268925494"],
+    ["09-17","19:00","新石器慧通（北京）科技有限公司秋招","清华·职业发展中心天一厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=268229413"],
+    ["09-17","19:00","中国工商银行总行本部2027年度校园招聘宣讲会","清华·职业发展中心浪潮厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267508531"],
+    ["09-17","19:00","燕东微2027全球校园招聘宣讲会","清华·职业发展中心东风汽车厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267767754"],
+    ["09-17","09:00","宜昌市“招才兴业”计划城市推介暨“千企百校行”清华大学专场双选会","清华·职业发展中心祖龙广场",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=262903208"],
+    ["09-18","09:30","怀柔实验室2027年校园招聘-清华大学专场","清华·职业发展中心美团创新空间",2,"thu","能源领域国家实验室，双碳强对口；跨校参加，外校准入以清华官网为准",1,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267322966"],
+    ["09-18","09:30","白云深处，与你同行——云深处科技2027全球校园招聘","清华·职业发展中心海博思创厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263335482"],
+    ["09-18","09:30","中国兵器工业第二〇三研究所2026年秋季校园招聘宣讲会","清华·职业发展中心天一厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261840184"],
+    ["09-18","09:30","南网共享公司2027年校园招聘宣讲会","清华·职业发展中心昆山国际会议厅",2,"thu","南方电网共享平台，能源对口；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263426009"],
+    ["09-18","14:00","东风奕派汽车科技公司 2027届秋季校园招聘","清华·职业发展中心东风汽车厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266951903"],
+    ["09-18","14:00","中信建投证券2027年校园招聘宣讲会","清华·职业发展中心海博思创厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264834230"],
+    ["09-18","14:00","2026年天津市组团式招才引智暨“双一流”高校校园招聘活动宣讲会（清华大学站）","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266956388"],
+    ["09-18","14:00","遥瞰寰宇 感知天地——航天五院遥感卫星总体部招聘宣讲会","清华·职业发展中心美团创新空间",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261406668"],
+    ["09-18","14:00","航空工业自控所（618所）宣讲会","清华·职业发展中心昆山国际会议厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263840249"],
+    ["09-18","14:00","2026年天津市组团式招才引智暨“双一流”高校重点单位双选会（清华大学站）","清华·职业发展中心祖龙广场",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269856436"],
+    ["09-18","14:00","华虹集团2027届校园招聘会清华大学专场","清华·职业发展中心浪潮厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267871247"],
+    ["09-18","15:00","歌尔集团2027届精英计划校园招聘","清华·职业发展中心天一厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=265909445"],
+    ["09-18","18:30","中国移动2027校园招聘全面启动！","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266293039"],
+    ["09-18","19:00","浪潮集团2027届校园招聘","清华·职业发展中心浪潮厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261345887"],
+    ["09-18","19:00","科磊半导体设备技术（上海）有限公司2027校园招聘","清华·职业发展中心天一厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263604783"],
+    ["09-18","19:00","北京经纬恒润2027校招专场","清华·职业发展中心美团创新空间",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266427776"],
+    ["09-18","19:00","佳驰科技2027届校园招聘清华大学专场宣讲会","清华·职业发展中心海博思创厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267024060"],
+    ["09-18","19:00","GMAP | 2027 Sea 全球管培生招聘清华大学站","清华·职业发展中心东风汽车厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261156420"],
+    ["09-19","14:00","江苏东成2027校园招聘-清华大学站","清华·职业发展中心东风汽车厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=265017921"],
+    ["09-19","19:00","腾讯2027校招宣讲会","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=265946096"],
+    ["09-20","14:00","2027届杰克科技校园招聘全球宣讲会-清华大学专场","清华·职业发展中心东风汽车厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266203105"],
+    ["09-20","14:00","2026年广州市海珠区事业单位公开招聘高校毕业生宣讲会（清华大学专场）","清华·职业发展中心海博思创厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264460762"],
+    ["09-20","14:00","北方华创微电子2027届校园宣讲会","清华·职业发展中心天一厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261997426"],
+    ["09-20","19:00","中国空空导弹研究院2027届毕业生招聘","清华·职业发展中心东风汽车厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269742996"],
+    ["09-20","19:00","英才教师计划","清华·职业发展中心海博思创厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=262679482"],
+    ["09-20","19:00","滴滴2027届校园招聘","清华·职业发展中心天一厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260887329"],
+    ["09-20","19:00","字节跳动2027校园招聘宣讲会","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269386771"],
+    ["09-20","19:00","米哈游2027校园招聘","清华·职业发展中心浪潮厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=262725677"],
+    ["09-20","09:00","青聚英才上海市青浦区招才引智全国行（北京站）","清华·职业发展中心华为多功能厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266315326"],
+    ["09-20","09:00","浙聘行动-浙江省重点单位双选会","清华·职业发展中心祖龙广场",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269682968"],
+    ["09-21","14:00","思格新能源2027校招宣讲","清华·职业发展中心东风汽车厅",3,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269529014"],
+    ["09-21","14:00","百度2027届校园招聘","清华·职业发展中心天一厅",4,"thu","清华专场；跨校参加，外校准入以清华官网为准",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=264417131"]
 ];
