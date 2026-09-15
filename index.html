@@ -61,6 +61,21 @@
   .sg .gbody .ev{background:#fff}
   .sg .gbody .empty{grid-column:1/-1}
 
+  /* 日期导航（手机/触屏右侧悬浮大纲，点击跳转、滚动高亮当天） */
+  #daynav{
+    display:none;position:fixed;right:5px;top:50%;transform:translateY(-50%);z-index:60;
+    flex-direction:column;gap:4px;
+  }
+  #daynav button{
+    width:40px;height:28px;padding:0;font-size:11px;border-radius:8px;
+    background:rgba(255,255,255,.94);border:1px solid #d5dbd3;color:#4a4a4a;
+    box-shadow:0 1px 4px rgba(0,0,0,.10);
+  }
+  #daynav button.on{background:#006C39;border-color:#006C39;color:#fff}
+  #daynav button.today{border-color:#A13F0B;color:#A13F0B}
+  #daynav button.today.on{background:#A13F0B;border-color:#A13F0B;color:#fff}
+  @media (max-width:860px){ #daynav{display:flex} }
+
   .legend{display:flex;flex-wrap:wrap;gap:13px;font-size:11.5px;color:#666;margin-bottom:11px;padding-left:2px}
   .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
   .lg1{background:#006C39}.lg2{background:#A13F0B}.lg3{background:#8aab96}.lg4{background:#c9d0ca}
@@ -208,6 +223,7 @@
   html.touch .ev .n,html.touch .ev .sl{display:block;font-size:11.5px}
   html.touch .ev .hint{display:none}
   html.touch .sg .gbody{grid-template-columns:1fr}
+  html.touch #daynav{display:flex}
 </style>
 </head>
 <body>
@@ -223,13 +239,7 @@
   <span class="lbl">周次</span>
   <div class="grp" id="wkbar"></div>
   <span class="lbl" style="margin-left:9px">筛选</span>
-  <div class="grp">
-    <button id="f-all" class="on" onclick="setF('all')">全部</button>
-    <button id="f-key" onclick="setF('key')">必去+优先</button>
-    <button id="f-bit" onclick="setF('bit')">北理工</button>
-    <button id="f-out" onclick="setF('out')">清华北大北航</button>
-    <button id="f-city" onclick="setF('city')">全市开放</button>
-  </div>
+  <div class="grp" id="fbar"></div>
   <span class="lbl" style="margin-left:9px">搜索</span>
   <input id="q" type="search" placeholder="企业 / 学校 / 关键词，空格分隔" autocomplete="off">
   <div class="spacer"></div>
@@ -257,11 +267,12 @@
 </div>
 
 <div class="cal" id="cal"></div>
+<div id="daynav"></div>
 
 <footer>
   <b>数据来源：</b>北理工就业资讯网（9月完整日历）、北理就业公众号、北航就业公众号、清华职业发展指导中心、北大就业信息网、北京高校大学生就业创业信息网（成功就业）、中央民族大学 / 北工大 / 农大 / 北师大 / 人大就业网。每条活动都带来源链接，点击可核实。<br>
   <b>提醒：</b>清北部分双选会官方写明面向本校学生，宣讲会现场通常可旁听；前往外校请带身份证、按校方入校规定报备。京彩就业场次时间与展位名单以 bjbys 官网为准。<br>
-  <b>叉掉 / 撤销记录保存在本机浏览器</b>（localStorage），换设备或清缓存会重置。数据版本 <span id="dv"></span>。
+  <b>叉掉 / 撤销记录保存在本机浏览器</b>（localStorage），换设备或清缓存会重置。数据版本 <span id="dv"></span><span id="dvx"></span>。
   <div id="quote" class="quote"></div>
 </footer>
 
@@ -282,6 +293,10 @@ var DOW=["周一","周二","周三","周四","周五","周六","周日"];
 var MM={bit:["b-bit","北理工"],thu:["b-thu","清华"],pku:["b-pku","北大"],buaa:["b-buaa","北航"],other:["b-other","外校"],city:["b-city","全市"]};
 var MC={bit:"#006C39",thu:"#660874",pku:"#94070A",buaa:"#1a5490",other:"#9a9a9a",city:"#0E7C7B"};
 var LV={1:["必去","#006C39"],2:["优先","#A13F0B"],3:["可去","#8aab96"],4:["可弃","#9aa19c"]};
+
+/* 学校独立筛选：信息来源(src) → 高校 归属表；未映射的非全市来源归入"其他" */
+var SCHOOL_SRC={bit:"北理工",thu:"清华",thu2:"清华",pku:"北大",buaa:"北航",buaawx:"北航",bnu:"北师大",bnuwx:"北师大",cau:"农大",ustb:"北科大",bjtu:"北交大",bjfu:"北林",ucas:"国科大",cugb:"地大（北京）",muc:"民大",bjut:"北工大",ruc:"人大"};
+var SCHOOL_ORDER=["北理工","北航","清华","北大","北科大","北交大","北师大","农大","国科大","北林","民大","北工大","人大","地大（北京）"];
 
 var cur=0, filter="all", Q="";
 var K_H="zwb_cal_hidden_v2", K_U="zwb_cal_undo_v2", K_SEEN="zwb_cal_seen_ver";
@@ -325,10 +340,11 @@ var TODAY=todayStr();
 /* ---------- 搜索 ---------- */
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function passF(x){
-  if(filter==="key" && x[4]>2) return false;
-  if(filter==="bit" && x[5]!=="bit") return false;
-  if(filter==="out" && ["thu","pku","buaa"].indexOf(x[5])<0) return false;
-  if(filter==="city" && x[5]!=="city") return false;
+  if(filter==="all") return true;
+  if(filter==="key") return x[4]<=2;
+  if(filter==="city") return x[5]==="city";
+  if(filter==="other") return x[5]!=="city" && !SCHOOL_SRC[x[8]];
+  if(filter.indexOf("s:")===0) return SCHOOL_SRC[x[8]]===filter.slice(2);
   return true;
 }
 /* 匹配范围：单位/活动 + 地点 + 备注 + 学校分类标签；空格分隔多关键词取交集 */
@@ -355,9 +371,9 @@ function render(){
   if(Q){
     renderSearch();
   }else{
-    var wk=WEEKS[cur], html="";
+    var wk=WEEKS[cur], html="", weekDates=[];
     for(var i=0;i<7;i++){
-      var d=dayOf(wk[0],i);
+      var d=dayOf(wk[0],i); weekDates.push(d);
       var dn=parseInt(d.split("-")[1],10), mo=d.split("-")[0];
       var items=[];
       D.forEach(function(x,ix){ if(x[0]===d) items.push(ix); });
@@ -379,6 +395,7 @@ function render(){
         + '<div class="cbody">'+cards+'</div></div>';
     }
     document.getElementById("cal").innerHTML=html;
+    buildDayNav(weekDates);
   }
 
   window.scrollTo(0,pageY);
@@ -418,6 +435,7 @@ function renderSearch(){
   });
   var groups={};
   vis.forEach(function(ix){ var d=D[ix][0]; (groups[d]=groups[d]||[]).push(ix); });
+  var gdates=Object.keys(groups).sort();
   var html='<div class="sres"><div class="shead">搜索“<b>'+esc(Q.replace(/\s+/g," "))+'</b>”：匹配 <b>'+vis.length+'</b> 场（全部周次，已套用上方筛选）'
     + '<button onclick="clearQ()">清除搜索</button></div>';
   if(!vis.length){
@@ -425,12 +443,13 @@ function renderSearch(){
   } else {
     Object.keys(groups).sort().forEach(function(d){
       var list=groups[d], isToday=(d===TODAY), p=d.split("-");
-      html+='<div class="sg'+(isToday?" today":"")+'"><div class="ghead"><b>'+p[0]+'月'+p[1]+'日</b> '+dowOf(d)+(isToday?" · 今天":"")+' · '+list.length+' 场</div>'
+      html+='<div class="sg'+(isToday?" today":"")+'" data-d="'+d+'"><div class="ghead"><b>'+p[0]+'月'+p[1]+'日</b> '+dowOf(d)+(isToday?" · 今天":"")+' · '+list.length+' 场</div>'
         + '<div class="gbody">'+list.map(cardHTML).join("")+'</div></div>';
     });
   }
   html+='</div>';
   document.getElementById("cal").innerHTML=html;
+  buildDayNav(gdates);
 }
 function clearQ(){
   var el=document.getElementById("q");
@@ -598,8 +617,8 @@ var QUOTES = [
 
 function setF(f){
   filter=f;
-  ["all","key","bit","out","city"].forEach(function(k){
-    document.getElementById("f-"+k).className=(k===f?"on":"");
+  Array.prototype.forEach.call(document.querySelectorAll("[data-f]"),function(b){
+    b.className=(b.getAttribute("data-f")===f?"on":"");
   });
   render();
 }
@@ -620,8 +639,59 @@ document.addEventListener("keydown",function(e){
   }
 });
 
+/* ---------- 日期导航（手机/触屏右侧悬浮大纲） ---------- */
+function buildDayNav(dates){
+  var nav=document.getElementById("daynav");
+  if(!nav) return;
+  if(!dates.length || dates.length>12){ nav.style.display="none"; nav.innerHTML=""; return; }
+  nav.innerHTML=dates.map(function(d){
+    var t=(d===TODAY)?' data-today="1"':'', p=d.split("-");
+    var lbl=(dates.length===7)?dowOf(d):p[1]+"日";
+    return '<button data-d="'+d+'"'+t+' title="'+p[0]+'月'+p[1]+'日" onclick="jumpDay(\''+d+'\')">'+lbl+'</button>';
+  }).join("");
+  nav.style.display="flex";
+  updateDayNavActive();
+}
+function jumpDay(d){
+  var el=document.querySelector('#cal [data-d="'+d+'"]');
+  if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function updateDayNavActive(){
+  var curD=null;
+  Array.prototype.forEach.call(document.querySelectorAll('#cal [data-d]'),function(sec){
+    if(sec.getBoundingClientRect().top<=140) curD=sec.getAttribute('data-d');
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('#daynav button'),function(b){
+    var on=(b.getAttribute('data-d')===curD), td=!!b.getAttribute('data-today');
+    b.className=(on?"on":"")+(td?" today":"");
+  });
+}
+var spyTick=false;
+window.addEventListener("scroll",function(){
+  if(spyTick) return; spyTick=true;
+  requestAnimationFrame(function(){ spyTick=false; updateDayNavActive(); });
+},{passive:true});
+
 (function(){
   document.getElementById("dv").textContent = DATA_VERSION;
+  var vp=DATA_VERSION.split("."), dvx=document.getElementById("dvx");
+  var total=(typeof CHANGELOG!=="undefined")?Object.keys(CHANGELOG).length:0;
+  if(dvx && vp.length>=3) dvx.textContent="（"+parseInt(vp[1],10)+"月"+parseInt(vp[2],10)+"日第 "+vp[2]+" 次更新 · 累计第 "+total+" 次更新）";
+  // 筛选栏：全部 / 必去+优先 / 全市开放 / 其他 / 各高校独立标签
+  var fbar=document.getElementById("fbar");
+  [["all","全部"],["key","必去+优先"],["city","全市开放"],["other","其他"]].forEach(function(f){
+    var b=document.createElement("button");
+    b.setAttribute("data-f",f[0]); b.textContent=f[1];
+    if(f[0]==="all") b.className="on";
+    b.onclick=function(){ setF(f[0]); };
+    fbar.appendChild(b);
+  });
+  SCHOOL_ORDER.forEach(function(s){
+    var b=document.createElement("button");
+    b.setAttribute("data-f","s:"+s); b.textContent=s;
+    b.onclick=function(){ setF("s:"+s); };
+    fbar.appendChild(b);
+  });
   var qEl=document.getElementById("q");
   qEl.addEventListener("input",function(){ Q=this.value.trim().toLowerCase(); render(); });
   var bar=document.getElementById("wkbar");
