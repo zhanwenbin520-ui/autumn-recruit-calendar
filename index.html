@@ -400,7 +400,7 @@ function normAllT(){
   D.forEach(function(x,ix){
     var own=SCHOOL_SRC[x[8]]||(MM[x[5]]||["","外校"])[1];
     var r=find(_NT[ix]);
-    (byRoot[r]=byRoot[r]||{}).push({ix:ix, own:own, date:x[0]});
+    (byRoot[r]=byRoot[r]||[]).push({ix:ix, own:own, date:x[0]});
   });
   _MU={};
   Object.keys(byRoot).forEach(function(r){
