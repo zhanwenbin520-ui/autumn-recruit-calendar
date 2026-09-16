@@ -43,6 +43,9 @@
   }
   #q:focus{border-color:#006C39;box-shadow:0 0 0 2px rgba(0,108,57,.08)}
   #q::placeholder{color:#b6bdb4}
+  /* 学校筛选标签区：放不下自动换行，禁止按钮文字被挤成一字一行 */
+  #fbar{flex:1 1 100%;flex-wrap:wrap;gap:5px 4px}
+  #fbar button{white-space:nowrap}
 
   /* 搜索结果列表 */
   .sres{display:flex;flex-direction:column;gap:10px}
@@ -212,6 +215,7 @@
     h1{font-size:19px}
     .bar{padding:9px 10px;gap:7px}
     button{padding:8px 12px;font-size:13px}
+    #fbar button{padding:6px 10px;font-size:12.5px}
     #q{flex:1 1 150px;width:auto}
     .legend{gap:9px;font-size:11px}
   }
@@ -295,8 +299,8 @@ var MC={bit:"#006C39",thu:"#660874",pku:"#94070A",buaa:"#1a5490",other:"#9a9a9a"
 var LV={1:["必去","#006C39"],2:["优先","#A13F0B"],3:["可去","#8aab96"],4:["可弃","#9aa19c"]};
 
 /* 学校独立筛选：信息来源(src) → 高校 归属表；未映射的非全市来源归入"其他" */
-var SCHOOL_SRC={bit:"北理工",thu:"清华",thu2:"清华",pku:"北大",buaa:"北航",buaawx:"北航",bnu:"北师大",bnuwx:"北师大",cau:"农大",ustb:"北科大",bjtu:"北交大",bjfu:"北林",ucas:"国科大",cugb:"地大（北京）",muc:"民大",bjut:"北工大",ruc:"人大"};
-var SCHOOL_ORDER=["北理工","北航","清华","北大","北科大","北交大","北师大","农大","国科大","北林","民大","北工大","人大","地大（北京）"];
+var SCHOOL_SRC={bit:"北理工",thu:"清华",thu2:"清华",pku:"北大",buaa:"北航",buaawx:"北航",bnu:"北师大",bnuwx:"北师大",cau:"农大",ustb:"北科大",bjtu:"北交大",bjfu:"北林",ucas:"国科大",cugb:"地大",muc:"民大",bjut:"北工大",ruc:"人大"};
+var SCHOOL_ORDER=["北理工","北航","清华","北大","北科大","北交大","北师大","农大","国科大","北林","民大","北工大","人大","地大"];
 
 var cur=0, filter="all", Q="";
 var K_H="zwb_cal_hidden_v2", K_U="zwb_cal_undo_v2", K_SEEN="zwb_cal_seen_ver";
