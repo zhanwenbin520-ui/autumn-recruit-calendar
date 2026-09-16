@@ -312,6 +312,10 @@ var BUILD="20260916b";
 
 /* 学校独立筛选：信息来源(src) → 高校 归属表；未映射的非全市来源归入"其他" */
 var SCHOOL_SRC={bit:"北理工",thu:"清华",thu2:"清华",pku:"北大",buaa:"北航",buaawx:"北航",bnu:"北师大",bnuwx:"北师大",cau:"农大",ustb:"北科大",bjtu:"北交大",bjfu:"北林",ucas:"国科大",cugb:"地大",muc:"民大",bjut:"北工大",ruc:"人大"};
+var SCHOOL_ORDER=["北理工","北航","清华","北大","北科大","北交大","人大","北工大"];
+/* 聚焦学校：仅展示这些高校的场次（全市开放与企业专场保留）；置空 [] 可恢复全部学校 */
+var FOCUS=["北理工","北航","清华","北大","北科大","北交大","人大","北工大"];
+var focusOff=false; /* 退出聚焦模式=true：显示全部学校 */
 var SCHOOL_ORDER=["北理工","北航","清华","北大","北科大","北交大","北师大","农大","国科大","北林","民大","北工大","人大","地大"];
 
 var cur=0, filter="all", Q="";
@@ -356,6 +360,10 @@ var TODAY=todayStr();
 /* ---------- 搜索 ---------- */
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function passF(x){
+  if(!focusOff && FOCUS.length){
+    var sc=SCHOOL_SRC[x[8]];
+    if(sc && FOCUS.indexOf(sc)<0) return false;
+  }
   if(filter==="all") return true;
   if(filter==="key") return x[4]<=2;
   if(filter==="city") return x[5]==="city";
@@ -376,7 +384,7 @@ function dowOf(dstr){
 }
 
 /* ---------- 卡片跨校提示：同单位在别的学校也有场次（一次性预计算） ---------- */
-var _NT=null,_MU=null;
+var _NT=null,_MU=null,_FIND=null;
 function normAllT(){
   if(_NT) return;
   _NT=D.map(function(x){ return normT(x[2]); });
@@ -391,7 +399,9 @@ function normAllT(){
     if(sameUnit(a,b)){ var ra=find(a), rb=find(b); if(ra!==rb) par[ra]=rb; }
   }
   var byRoot={};
+  _FIND=find;
   D.forEach(function(x,ix){
+    if(FOCUS.length){ var sc0=SCHOOL_SRC[x[8]]; if(sc0 && FOCUS.indexOf(sc0)<0) return; }
     var own=SCHOOL_SRC[x[8]]||(MM[x[5]]||["","外校"])[1];
     var r=find(_NT[ix]);
     (byRoot[r]=byRoot[r]||[]).push({ix:ix, own:own, date:x[0]});
@@ -413,7 +423,7 @@ function normAllT(){
             parts.push(s+" "+ds.join("·"));
           }
         });
-        _MU[date+"|"+own]=parts.length?(parts.slice(0,3).join("、")+(parts.length>3?" 等"+cnt+"校":"")+" 也有"):"";
+        (_MU[r]=_MU[r]||{})[date+"|"+own]=parts.length?(parts.slice(0,3).join("、")+(parts.length>3?" 等"+cnt+"校":"")+" 也有"):"";
       });
     });
   });
@@ -421,7 +431,10 @@ function normAllT(){
 function multiHint(ix){
   normAllT();
   var x=D[ix];
-  return _MU[x[0]+"|"+(SCHOOL_SRC[x[8]]||(MM[x[5]]||["","外校"])[1])]||"";
+  var own=SCHOOL_SRC[x[8]]||(MM[x[5]]||["","外校"])[1];
+  var root=_FIND?_FIND(_NT[ix]):null;
+  var m=(root!==null&&_MU[root])||{};
+  return m[x[0]+"|"+own]||"";
 }
 
 function render(){
@@ -746,6 +759,42 @@ var QUOTES = [
   q.textContent="✦ "+QUOTES[Math.floor(Math.random()*QUOTES.length)];
 })();
 
+function rebuildSchoolBar(){
+  var fbar=document.getElementById("fbar");
+  if(!fbar) return;
+  fbar.innerHTML="";
+  [["all","全部"],["key","必去+优先"],["city","全市开放"],["other","其他"]].forEach(function(f){
+    var b=document.createElement("button");
+    b.setAttribute("data-f",f[0]); b.textContent=f[1];
+    b.className=(f[0]===filter?"on":"");
+    b.onclick=function(){ setF(f[0]); };
+    fbar.appendChild(b);
+  });
+  (focusOff?SCHOOL_ORDER:FOCUS).forEach(function(sch){
+    var b=document.createElement("button");
+    b.setAttribute("data-f","s:"+sch); b.textContent=sch;
+    b.className=(filter==="s:"+sch?"on":"");
+    b.onclick=function(){ setF("s:"+sch); };
+    fbar.appendChild(b);
+  });
+  var fb=document.createElement("button");
+  fb.id="focusBtn"; fb.className="warn";
+  fb.onclick=function(){ setFocusMode(!focusOff); };
+  fbar.appendChild(fb);
+  syncFocusBtn();
+}
+function syncFocusBtn(){
+  var fb=document.getElementById("focusBtn");
+  if(!fb) return;
+  fb.textContent=focusOff?"进入聚焦模式":"退出聚焦模式";
+  fb.title=focusOff?"恢复显示 8 所聚焦高校":"只看北理工/北航/清华/北大/北科大/北交大/人大/北工大，其他学校隐藏";
+}
+function setFocusMode(off){
+  focusOff=off;
+  try{ localStorage.setItem("zwb_cal_focus",off?"0":"1"); }catch(e){}
+  rebuildSchoolBar();
+  render();
+}
 function setF(f){
   filter=f;
   Array.prototype.forEach.call(document.querySelectorAll("[data-f]"),function(b){
@@ -822,23 +871,12 @@ window.addEventListener("scroll",function(){
     var mm=parseInt(vp[0].replace("V",""),10), dd=parseInt(vp[1],10);
     dvx.textContent="（"+mm+"月"+dd+"日第 "+vp[2]+" 次更新 · 累计第 "+total+" 次更新）";
   }
-  // 筛选栏：全部 / 必去+优先 / 全市开放 / 其他 / 各高校独立标签
-  var fbar=document.getElementById("fbar");
-  [["all","全部"],["key","必去+优先"],["city","全市开放"],["other","其他"]].forEach(function(f){
-    var b=document.createElement("button");
-    b.setAttribute("data-f",f[0]); b.textContent=f[1];
-    if(f[0]==="all") b.className="on";
-    b.onclick=function(){ setF(f[0]); };
-    fbar.appendChild(b);
-  });
-  SCHOOL_ORDER.forEach(function(s){
-    var b=document.createElement("button");
-    b.setAttribute("data-f","s:"+s); b.textContent=s;
-    b.onclick=function(){ setF("s:"+s); };
-    fbar.appendChild(b);
-  });
+  // 筛选栏：全部 / 必去+优先 / 全市开放 / 其他 / 各高校独立标签 / 聚焦切换
+  rebuildSchoolBar();
   var qEl=document.getElementById("q");
   qEl.addEventListener("input",function(){ Q=this.value.trim().toLowerCase(); render(); });
+  // 聚焦模式偏好记忆
+  try{ if(localStorage.getItem("zwb_cal_focus")==="0") focusOff=true; }catch(e){}
   // 日期导航展开状态：记忆上次选择；首次访问手机/窄屏默认展开，电脑默认收起
   try{
     var savedNav=localStorage.getItem("zwb_cal_nav");
