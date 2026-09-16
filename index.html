@@ -158,6 +158,11 @@
   .modal .kv{display:flex;gap:9px;font-size:12.5px;margin-top:9px;align-items:flex-start}
   .modal .kv .k{color:#8a8a8a;min-width:52px}
   .modal .kv .v{color:#333;flex:1}
+  .modal .rel{
+    display:inline-block;background:#eef4ee;border:1px solid #cfe0d2;color:#006C39;
+    border-radius:5px;padding:1.5px 8px;margin:2px 4px 2px 0;font-size:12px;cursor:pointer;text-decoration:none;
+  }
+  .modal .rel:hover{background:#006C39;color:#fff;border-color:#006C39}
   .modal .note{background:#fff8f3;border-left:3px solid #A13F0B;padding:8px 10px;border-radius:4px;
                font-size:12.5px;color:#7a3d18;margin-top:11px;line-height:1.65}
   .modal .src{background:#f1f6f2;border-left:3px solid #006C39;padding:8px 10px;border-radius:4px;
@@ -539,6 +544,36 @@ function toast(msg, undoable){
 }
 
 /* ---------- 详情弹窗 ---------- */
+/* ---------- 同单位跨校场次识别 ----------
+   标题归一化（忽略届别/年份/场次类型/括号差异），再按包含或前缀判定是否同一单位，
+   逻辑与服务器抓取脚本的去重规则同源 */
+function normT(s){
+  return (s||"").replace(/\s|【|】|\[|\]|“|”|"|『|』|（[^）]*）|\([^)]*\)/g,"")
+    .replace(/20\d{2}(届|年度?|届生)?/g,"")
+    .replace(/校园|秋季|春季|全球|联合|空中宣讲会|宣讲会|宣讲|双选会|招聘会|洽谈会|见面会|专场|正式启动|启动会|暨|校招|招聘|年度/g,"")
+    .replace(/有限公司|股份|公司|集团/g,"")
+    .replace(/[+＋·—\-_/、，,]+/g,"")
+    .toLowerCase();
+}
+function sameUnit(a,b){
+  if(!a||!b||a.length<2||b.length<2) return false;
+  if(a===b) return true;
+  if(a.indexOf(b)>=0 && b.length>=3) return true;
+  if(b.indexOf(a)>=0 && a.length>=3) return true;
+  if(a.slice(0,6)===b.slice(0,6) && Math.min(a.length,b.length)>=6) return true;
+  return false;
+}
+function relatedSessions(ix){
+  var x=D[ix], nx=normT(x[2]), out=[], seen={};
+  if(!nx || nx.length<2) return out;
+  D.forEach(function(y,jx){
+    if(jx===ix || hidden[KEYS[jx]] || seen[KEYS[jx]]) return;
+    if(!sameUnit(nx,normT(y[2]))) return;
+    seen[KEYS[jx]]=1; out.push(jx);
+  });
+  return out;
+}
+
 function openM(ix){
   var x=D[ix], m=MM[x[5]]||["b-other","其他"], s=srcOf(x);
   var lv=LV[x[4]]||["","#666"];
@@ -549,6 +584,17 @@ function openM(ix){
   h+='<div class="kv"><span class="k">时间</span><span class="v">'+x[0].replace("-","月")+'日 '+x[1]+'</span></div>';
   h+='<div class="kv"><span class="k">地点</span><span class="v">'+x[3]+'</span></div>';
   h+='<div class="kv"><span class="k">分类</span><span class="v">'+sch+' <span class="mb" style="background:'+lv[1]+'">'+lv[0]+'</span></span></div>';
+  /* 同单位在其他学校的场次：点击跳到那一场 */
+  var rel=relatedSessions(ix);
+  if(rel.length){
+    var chips=rel.slice(0,10).map(function(jx){
+      var y=D[jx], m2=MM[y[5]]||["b-other","其他"];
+      return '<a class="rel" onclick="openM('+jx+')">'+m2[1]+' '+y[0].replace("-","/")+' '+y[1]+'</a>';
+    }).join("");
+    if(rel.length>10) chips+=' <span style="font-size:11px;color:#8a8a8a">等共 '+rel.length+' 场</span>';
+    h+='<div class="kv"><span class="k">同单位</span><span class="v">'+chips
+      +'<div style="font-size:10.5px;color:#9aa19c;margin-top:3px">该单位在其他学校也有场次，点击查看，方便就近规划</div></span></div>';
+  }
   if(x[6]) h+='<div class="note"><b>建议：</b>'+linkify(x[6])+'</div>';
   h+='<div class="src"><b>来源（点击核实）：</b><br><a href="'+s.u+'" target="_blank" rel="noopener">'+s.n+' ↗</a>'
     + (s.u?'<br><span style="color:#8a8a8a;font-size:11px">'+s.u+'</span>':'') + '</div>';
