@@ -127,6 +127,8 @@
   .ev.l4 .o{color:#6d736f}
   .ev .p{font-size:10px;color:#8d8d8d;margin-top:2px}
   .ev .n{font-size:10.5px;color:#A13F0B;margin-top:3px;display:none;background:#fff8f3;padding:3px 5px;border-radius:3px;line-height:1.5}
+  .ev .mu{font-size:10.5px;color:#0E7C7B;margin-top:3px;display:none;background:#effaf8;padding:3px 5px;border-radius:3px;line-height:1.5}
+  .ev:hover .mu{display:block}
   .ev .sl{display:none;font-size:10px;color:#006C39;margin-top:3px;text-decoration:none;border-top:1px dashed #dfe3de;padding-top:3px}
   .ev .sl:hover{text-decoration:underline}
   .ev .hint{display:none;font-size:9.5px;color:#b0b6ae;margin-top:2px}
@@ -225,7 +227,7 @@
     .ev .o{font-size:13px;line-height:1.45}
     .ev .p{font-size:11.5px}
     /* 触屏没有 hover：备注与来源链接直接展开显示 */
-    .ev .n,.ev .sl{display:block;font-size:11.5px}
+    .ev .n,.ev .sl,.ev .mu{display:block;font-size:11.5px}
     .ev .hint{display:none}
     .sg .gbody{grid-template-columns:1fr}
     h1{font-size:19px}
@@ -240,7 +242,7 @@
      列内独立滚动在触屏上必然串列或失灵，索性不存在 */
   html.touch .cal{grid-template-columns:1fr;gap:10px}
   html.touch .cbody{max-height:none;overflow:visible;min-height:0}
-  html.touch .ev .n,html.touch .ev .sl{display:block;font-size:11.5px}
+  html.touch .ev .n,html.touch .ev .sl,html.touch .ev .mu{display:block;font-size:11.5px}
   html.touch .ev .hint{display:none}
   html.touch .sg .gbody{grid-template-columns:1fr}
 </style>
@@ -379,6 +381,54 @@ function dowOf(dstr){
   return ["周日","周一","周二","周三","周四","周五","周六"][wd];
 }
 
+/* ---------- 卡片跨校提示：同单位在别的学校也有场次（一次性预计算） ---------- */
+var _NT=null,_MU=null;
+function normAllT(){
+  if(_NT) return;
+  _NT=D.map(function(x){ return normT(x[2]); });
+  var g={}, keys;
+  _NT.forEach(function(t,ix){ (g[t]=g[t]||[]).push(ix); });
+  keys=Object.keys(g);
+  var par={};
+  function find(k){ while(par[k]!==k){ par[k]=par[par[k]]; k=par[k]; } return k; }
+  keys.forEach(function(k){ par[k]=k; });
+  for(var i=0;i<keys.length;i++) for(var j=i+1;j<keys.length;j++){
+    var a=keys[i], b=keys[j];
+    if(sameUnit(a,b)){ var ra=find(a), rb=find(b); if(ra!==rb) par[ra]=rb; }
+  }
+  var byRoot={};
+  D.forEach(function(x,ix){
+    var own=SCHOOL_SRC[x[8]]||(MM[x[5]]||["","外校"])[1];
+    var r=find(_NT[ix]);
+    (byRoot[r]=byRoot[r]||{}).push({ix:ix, own:own, date:x[0]});
+  });
+  _MU={};
+  Object.keys(byRoot).forEach(function(r){
+    var bySchool={};
+    byRoot[r].forEach(function(o){ (bySchool[o.own]=bySchool[o.own]||[]).push(o.date.replace("09-","9/").replace("10-","10/")); });
+    Object.keys(bySchool).forEach(function(own){
+      bySchool[own].forEach(function(date){
+    var parts=[], cnt=0;
+    Object.keys(bySchool).forEach(function(s){
+      if(s===own) return;
+      cnt++;
+      if(parts.length<3){
+        var ds=bySchool[s].filter(function(v,idx,arr){ return arr.indexOf(v)===idx; }).sort();
+        if(ds.length>2) ds=ds.slice(0,2).concat("…");
+        parts.push(s+" "+ds.join("·"));
+      }
+    });
+    _MU[date+"|"+own]=parts.length?(parts.slice(0,3).join("、")+(parts.length>3?" 等"+cnt+"校":"")+" 也有"):"";
+      });
+    });
+  });
+}
+function multiHint(ix){
+  normAllT();
+  var x=D[ix];
+  return _MU[x[0]+"|"+(SCHOOL_SRC[x[8]]||(MM[x[5]]||["","外校"])[1])]||"";
+}
+
 function render(){
   /* 保留滚动位置：叉掉/撤销/恢复后不跳回顶部（整页 + 桌面端每列内部各自记忆） */
   var pageY=window.scrollY||window.pageYOffset||0;
@@ -431,12 +481,13 @@ function cardHTML(ix){
   var badge = '<span class="badge '+m[0]+'">'+m[1]+'</span>';
   var kb = x[7] ? '<span class="badge b-key">重磅</span>' : '';
   var note = x[6] ? '<div class="n">'+linkify(x[6])+'</div>' : '';
+  var mu = multiHint(ix) ? '<div class="mu">'+multiHint(ix)+'</div>' : '';
   var sl = s.u ? '<a class="sl" href="'+s.u+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">来源：'+s.n+' ↗</a>' : '';
   return '<div class="ev l'+x[4]+'" data-i="'+ix+'" onclick="openM('+ix+')">'
     + '<div class="x" onclick="event.stopPropagation();hide('+ix+')" title="叉掉">&times;</div>'
     + '<div class="t">'+x[1]+'</div>'
     + '<div class="o">'+x[2]+badge+kb+'</div>'
-    + '<div class="p">'+x[3]+'</div>'+note+sl
+    + '<div class="p">'+x[3]+'</div>'+note+mus+sl
     + '<div class="hint">点击看完整详情 ↗</div></div>';
 }
 
