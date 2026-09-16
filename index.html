@@ -97,6 +97,11 @@
   .col.today .chead{background:#fdf1e9}
   .col.today .dnum{color:#A13F0B}
   .chead .dnote{font-size:10px;color:#9a9a9a}
+  .chead .cpy{
+    font-size:10px;padding:2px 6px;margin-left:4px;border-radius:4px;cursor:pointer;
+    border:1px solid #c9d2c8;background:#fff;color:#006C39;white-space:nowrap;
+  }
+  .chead .cpy:hover{background:#006C39;color:#fff;border-color:#006C39}
   .cbody{padding:5px;display:flex;flex-direction:column;gap:4px;min-height:110px;max-height:640px;overflow-y:auto}
   .cbody::-webkit-scrollbar{width:6px}
   .cbody::-webkit-scrollbar-thumb{background:#d5dbd3;border-radius:3px}
@@ -469,7 +474,7 @@ function render(){
       if(vis.length) cards=vis.map(cardHTML).join("");
       html += '<div class="col'+(d===TODAY?" today":"")+'" data-d="'+d+'"><div class="chead"><div class="dow">'+DOW[i]+(d===TODAY?" · 今天":"")+'</div>'
         + '<div class="dnum">'+(mo==="10"?"10/":mo==="11"?"11/":"")+dn+'</div>'
-        + '<div class="dnote">'+vis.length+' 场</div></div>'
+        + '<div class="dnote">'+vis.length+' 场 <button class="cpy" onclick="event.stopPropagation();copyDay(\''+d+'\')" title="复制当日 JSON，粘贴给 AI 帮你筛选">复制</button></div></div>'
         + '<div class="cbody">'+cards+'</div></div>';
     }
     document.getElementById("cal").innerHTML=html;
@@ -522,7 +527,7 @@ function renderSearch(){
   } else {
     Object.keys(groups).sort().forEach(function(d){
       var list=groups[d], isToday=(d===TODAY), p=d.split("-");
-      html+='<div class="sg'+(isToday?" today":"")+'" data-d="'+d+'"><div class="ghead"><b>'+p[0]+'月'+p[1]+'日</b> '+dowOf(d)+(isToday?" · 今天":"")+' · '+list.length+' 场</div>'
+      html+='<div class="sg'+(isToday?" today":"")+'" data-d="'+d+'"><div class="ghead"><b>'+p[0]+'月'+p[1]+'日</b> '+dowOf(d)+(isToday?" · 今天":"")+' · '+list.length+' 场 <button class="cpy" onclick="event.stopPropagation();copyDay(\''+d+'\')" title="复制当日 JSON，粘贴给 AI 帮你筛选">复制</button></div>'
         + '<div class="gbody">'+list.map(cardHTML).join("")+'</div></div>';
     });
   }
@@ -535,6 +540,55 @@ function clearQ(){
   if(el) el.value="";
   Q="";
   render();
+}
+
+/* ---------- 一键复制当日安排（JSON + AI 提示词） ---------- */
+function dayEvents(d){
+  var out=[];
+  D.forEach(function(x,ix){
+    if(x[0]!==d || hidden[KEYS[ix]]) return;
+    if(!passF(x) || !matchQ(x)) return;
+    var s=srcOf(x);
+    out.push({
+      时间:x[1], 活动:x[2], 学校:(SCHOOL_SRC[x[8]]||(MM[x[5]]||["","其他"])[1]),
+      地点:x[3], 级别:(LV[x[4]]||[""])[0], 备注:(x[6]||"").replace(/<[^>]*>/g,""),
+      来源链接:(x[9]||s.u||"")
+    });
+  });
+  return out;
+}
+function dayJSON(d){
+  var evs=dayEvents(d), wk="";
+  Array.prototype.forEach.call(document.querySelectorAll('#cal [data-d]'),function(sec){
+    if(sec.getAttribute("data-d")===d){
+      var b=sec.querySelector(".ghead b, .chead .dnum");
+      if(b) wk=b.textContent;
+    }
+  });
+  return JSON.stringify({日期:d, 场次数:evs.length, 场次列表:evs}, null, 1);
+}
+function copyText(t){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(t).catch(function(){ fallbackCopy(t); });
+  }
+  fallbackCopy(t);
+}
+function fallbackCopy(t){
+  var ta=document.createElement("textarea");
+  ta.value=t; ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  document.body.removeChild(ta);
+}
+function copyDay(d){
+  var payload="请根据我的专业和求职意向，从下面的招聘活动列表里帮我筛出最值得参加的场次，"
+    + "按优先级排序并说明理由。我的情况：【在此填写，如：材料硕士，想投新能源/双碳方向的央企国企】\n"
+    + dayJSON(d);
+  copyText(payload).then(function(){
+    toast("已复制 "+d.replace("-","/")+" 的活动安排，去粘贴给 AI 筛选吧", false);
+  }).catch(function(){
+    toast("复制失败，请长按手动复制", false);
+  });
 }
 
 function updBtns(){
