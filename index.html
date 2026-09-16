@@ -661,8 +661,10 @@ function staleBanner(v){
 }
 function checkRemote(){
   fetch("index.html",{cache:"reload"}).then(function(r){ return r.text(); }).then(function(t){
-    var v=(t.match(/var DATA_VERSION = "([^"]+)"/)||[])[1];
-    var b=(t.match(/var BUILD="([^"]+)"/)||[])[1];
+    /* 注意：正则必须限定版本号形态(V数字.数字.数字)，否则会匹配到本函数自己的
+       源代码文本(var DATA_VERSION = "([^"]+)")，捕获出乱码导致每1.5秒误报一次 */
+    var v=(t.match(/var DATA_VERSION = "(V\d+\.\d+\.\d+)"/)||[])[1];
+    var b=(t.match(/var BUILD="(\w+)"/)||[])[1];
     if((v && v!==DATA_VERSION) || (b && BUILD && b!==BUILD)) staleBanner(v||DATA_VERSION);
   }).catch(function(){});
 }
@@ -770,7 +772,10 @@ window.addEventListener("scroll",function(){
   document.getElementById("dv").textContent = DATA_VERSION;
   var vp=DATA_VERSION.split("."), dvx=document.getElementById("dvx");
   var total=(typeof CHANGELOG!=="undefined")?Object.keys(CHANGELOG).length:0;
-  if(dvx && vp.length>=3) dvx.textContent="（"+parseInt(vp[1],10)+"月"+parseInt(vp[2],10)+"日第 "+vp[2]+" 次更新 · 累计第 "+total+" 次更新）";
+  if(dvx && vp.length>=3){
+    var mm=parseInt(vp[0].replace("V",""),10), dd=parseInt(vp[1],10);
+    dvx.textContent="（"+mm+"月"+dd+"日第 "+vp[2]+" 次更新 · 累计第 "+total+" 次更新）";
+  }
   // 筛选栏：全部 / 必去+优先 / 全市开放 / 其他 / 各高校独立标签
   var fbar=document.getElementById("fbar");
   [["all","全部"],["key","必去+优先"],["city","全市开放"],["other","其他"]].forEach(function(f){
