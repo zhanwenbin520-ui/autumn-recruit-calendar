@@ -405,20 +405,21 @@ function normAllT(){
   _MU={};
   Object.keys(byRoot).forEach(function(r){
     var bySchool={};
-    byRoot[r].forEach(function(o){ (bySchool[o.own]=bySchool[o.own]||[]).push(o.date.replace("09-","9/").replace("10-","10/")); });
+    byRoot[r].forEach(function(o){ (bySchool[o.own]=bySchool[o.own]||[]).push(o.date); });
     Object.keys(bySchool).forEach(function(own){
       bySchool[own].forEach(function(date){
-    var parts=[], cnt=0;
-    Object.keys(bySchool).forEach(function(s){
-      if(s===own) return;
-      cnt++;
-      if(parts.length<3){
-        var ds=bySchool[s].filter(function(v,idx,arr){ return arr.indexOf(v)===idx; }).sort();
-        if(ds.length>2) ds=ds.slice(0,2).concat("…");
-        parts.push(s+" "+ds.join("·"));
-      }
-    });
-    _MU[date+"|"+own]=parts.length?(parts.slice(0,3).join("、")+(parts.length>3?" 等"+cnt+"校":"")+" 也有"):"";
+        var parts=[], cnt=0;
+        Object.keys(bySchool).forEach(function(s){
+          if(s===own) return;
+          cnt++;
+          if(parts.length<3){
+            var ds=bySchool[s].filter(function(v,idx,arr){ return arr.indexOf(v)===idx; }).sort();
+            ds=ds.map(function(v){ return v.replace("09-","9/").replace("10-","10/"); });
+            if(ds.length>2) ds=ds.slice(0,2).concat("…");
+            parts.push(s+" "+ds.join("·"));
+          }
+        });
+        _MU[date+"|"+own]=parts.length?(parts.slice(0,3).join("、")+(parts.length>3?" 等"+cnt+"校":"")+" 也有"):"";
       });
     });
   });
