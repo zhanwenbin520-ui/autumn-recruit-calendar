@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>秋招活动日历 · 2026 秋招季</title>
-<script>try{if((window.matchMedia&&window.matchMedia('(pointer: coarse)').matches)||('ontouchstart' in window))document.documentElement.className+=' touch';}catch(e){}</script>
+<script>try{if(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches)document.documentElement.className+=' touch';}catch(e){}</script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{
@@ -64,10 +64,11 @@
   .sg .gbody .ev{background:#fff}
   .sg .gbody .empty{grid-column:1/-1}
 
-  /* 日期导航（手机/触屏右侧悬浮大纲，点击跳转、滚动高亮当天） */
+  /* 日期导航（右侧悬浮大纲，点击跳转、滚动高亮当天）
+     手机/触屏：常驻显示；电脑：默认收起为 ☰ 把手，点击展开（状态记忆在本地） */
   #daynav{
     display:none;position:fixed;right:5px;top:50%;transform:translateY(-50%);z-index:60;
-    flex-direction:column;gap:4px;
+    flex-direction:column;gap:4px;align-items:flex-end;
   }
   #daynav button{
     width:40px;height:28px;padding:0;font-size:11px;border-radius:8px;
@@ -77,7 +78,17 @@
   #daynav button.on{background:#006C39;border-color:#006C39;color:#fff}
   #daynav button.today{border-color:#A13F0B;color:#A13F0B}
   #daynav button.today.on{background:#A13F0B;border-color:#A13F0B;color:#fff}
-  @media (max-width:860px){ #daynav{display:flex} }
+  #daynav .tg{width:30px;height:24px;color:#7a8a7d;font-weight:700}
+  #daynav .tg:hover{background:#006C39;color:#fff;border-color:#006C39}
+  #daynav.off{display:none!important}
+  @media (max-width:860px),(pointer:coarse){
+    #daynav{display:flex}
+    #daynav .tg{display:none}
+  }
+  @media (hover:hover) and (pointer:fine){
+    #daynav{display:flex}
+    html:not(.navopen) #daynav .db{display:none}
+  }
 
   .legend{display:flex;flex-wrap:wrap;gap:13px;font-size:11.5px;color:#666;margin-bottom:11px;padding-left:2px}
   .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
@@ -232,7 +243,6 @@
   html.touch .ev .n,html.touch .ev .sl{display:block;font-size:11.5px}
   html.touch .ev .hint{display:none}
   html.touch .sg .gbody{grid-template-columns:1fr}
-  html.touch #daynav{display:flex}
 </style>
 </head>
 <body>
@@ -276,7 +286,7 @@
 </div>
 
 <div class="cal" id="cal"></div>
-<div id="daynav"></div>
+<div id="daynav"><button class="tg" onclick="toggleNav()" title="展开/收起日期导航">☰</button><div class="db" id="daynavdb"></div></div>
 
 <footer>
   <b>数据来源：</b>北理工就业资讯网（9月完整日历）、北理就业公众号、北航就业公众号、清华职业发展指导中心、北大就业信息网、北京高校大学生就业创业信息网（成功就业）、中央民族大学 / 北工大 / 农大 / 北师大 / 人大就业网。每条活动都带来源链接，点击可核实。<br>
@@ -691,16 +701,27 @@ document.addEventListener("keydown",function(e){
 
 /* ---------- 日期导航（手机/触屏右侧悬浮大纲） ---------- */
 function buildDayNav(dates){
+  var db=document.getElementById("daynavdb");
+  if(!db) return;
   var nav=document.getElementById("daynav");
-  if(!nav) return;
-  if(!dates.length || dates.length>12){ nav.style.display="none"; nav.innerHTML=""; return; }
-  nav.innerHTML=dates.map(function(d){
+  if(!dates.length || dates.length>12){ nav.classList.add("off"); db.innerHTML=""; return; }
+  nav.classList.remove("off");
+  db.innerHTML=dates.map(function(d){
     var t=(d===TODAY)?' data-today="1"':'', p=d.split("-");
     var lbl=(dates.length===7)?dowOf(d):p[1]+"日";
     return '<button data-d="'+d+'"'+t+' title="'+p[0]+'月'+p[1]+'日" onclick="jumpDay(\''+d+'\')">'+lbl+'</button>';
   }).join("");
-  nav.style.display="flex";
   updateDayNavActive();
+}
+function toggleNav(){
+  var open=document.documentElement.classList.toggle("navopen");
+  try{ localStorage.setItem("zwb_cal_nav",open?"1":"0"); }catch(e){}
+  syncNavHandle();
+}
+function syncNavHandle(){
+  var open=document.documentElement.classList.contains("navopen");
+  var tg=document.querySelector("#daynav .tg");
+  if(tg){ tg.textContent=open?"×":"☰"; tg.title=open?"收起日期导航":"展开日期导航"; }
 }
 function jumpDay(d){
   var el=document.querySelector('#cal [data-d="'+d+'"]');
@@ -744,6 +765,9 @@ window.addEventListener("scroll",function(){
   });
   var qEl=document.getElementById("q");
   qEl.addEventListener("input",function(){ Q=this.value.trim().toLowerCase(); render(); });
+  // 电脑端日期导航的展开/收起状态记忆
+  try{ if(localStorage.getItem("zwb_cal_nav")==="1") document.documentElement.classList.add("navopen"); }catch(e){}
+  syncNavHandle();
   var bar=document.getElementById("wkbar");
   WEEKS.forEach(function(w,i){
     var b=document.createElement("button");
