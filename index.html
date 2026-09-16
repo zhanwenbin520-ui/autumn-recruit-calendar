@@ -312,6 +312,7 @@ var DOW=["周一","周二","周三","周四","周五","周六","周日"];
 var MM={bit:["b-bit","北理工"],thu:["b-thu","清华"],pku:["b-pku","北大"],buaa:["b-buaa","北航"],other:["b-other","外校"],city:["b-city","全市"]};
 var MC={bit:"#006C39",thu:"#660874",pku:"#94070A",buaa:"#1a5490",other:"#9a9a9a",city:"#0E7C7B"};
 var LV={1:["必去","#006C39"],2:["优先","#A13F0B"],3:["可去","#8aab96"],4:["可弃","#9aa19c"]};
+var BUILD="20260916a";
 
 /* 学校独立筛选：信息来源(src) → 高校 归属表；未映射的非全市来源归入"其他" */
 var SCHOOL_SRC={bit:"北理工",thu:"清华",thu2:"清华",pku:"北大",buaa:"北航",buaawx:"北航",bnu:"北师大",bnuwx:"北师大",cau:"农大",ustb:"北科大",bjtu:"北交大",bjfu:"北林",ucas:"国科大",cugb:"地大",muc:"民大",bjut:"北工大",ruc:"人大"};
@@ -645,6 +646,28 @@ function openRefs(){
   document.getElementById("modal").innerHTML=h;
   document.getElementById("mask").classList.add("show");
 }
+
+/* ---------- 线上版本自检：浏览器缓存了旧页面时，提示用户一键刷新 ----------
+   打开 1.5 秒后核对一次线上版本，之后每 10 分钟一次；比对对象 = 线上
+   index.html 里的 DATA_VERSION 与 BUILD 标记，任一比本页新就弹提示 */
+function staleBanner(v){
+  var t=document.getElementById("toast");
+  clearTimeout(tTimer);
+  document.getElementById("toastMsg").textContent="看板已更新到 "+v+"，本页是旧版本";
+  var btn=document.getElementById("toastBtn");
+  btn.textContent="刷新更新"; btn.style.display="";
+  btn.onclick=function(){ location.reload(); };
+  t.classList.add("show");
+}
+function checkRemote(){
+  fetch("index.html",{cache:"reload"}).then(function(r){ return r.text(); }).then(function(t){
+    var v=(t.match(/var DATA_VERSION = "([^"]+)"/)||[])[1];
+    var b=(t.match(/var BUILD="([^"]+)"/)||[])[1];
+    if((v && v!==DATA_VERSION) || (b && BUILD && b!==BUILD)) staleBanner(v||DATA_VERSION);
+  }).catch(function(){});
+}
+setTimeout(checkRemote,1500);
+setInterval(checkRemote,10*60*1000);
 
 /* ---------- 底部随机鼓励语：每次打开换一句 ---------- */
 var QUOTES = [
