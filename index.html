@@ -64,10 +64,10 @@
   .sg .gbody .ev{background:#fff}
   .sg .gbody .empty{grid-column:1/-1}
 
-  /* 日期导航（右侧悬浮大纲，点击跳转、滚动高亮当天）
-     手机/触屏：常驻显示；电脑：默认收起为 ☰ 把手，点击展开（状态记忆在本地） */
+  /* 日期导航（右侧悬浮大纲）：点日期跳转、滚动高亮当前天；
+     ☰ 收起/展开，全设备通用，选择自动记忆 */
   #daynav{
-    display:none;position:fixed;right:5px;top:50%;transform:translateY(-50%);z-index:60;
+    display:flex;position:fixed;right:5px;top:50%;transform:translateY(-50%);z-index:60;
     flex-direction:column;gap:4px;align-items:flex-end;
   }
   #daynav button{
@@ -80,15 +80,9 @@
   #daynav button.today.on{background:#A13F0B;border-color:#A13F0B;color:#fff}
   #daynav .tg{width:30px;height:24px;color:#7a8a7d;font-weight:700}
   #daynav .tg:hover{background:#006C39;color:#fff;border-color:#006C39}
+  #daynav .db{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+  html:not(.navopen) #daynav .db{display:none}
   #daynav.off{display:none!important}
-  @media (max-width:860px),(pointer:coarse){
-    #daynav{display:flex}
-    #daynav .tg{display:none}
-  }
-  @media (hover:hover) and (pointer:fine){
-    #daynav{display:flex}
-    html:not(.navopen) #daynav .db{display:none}
-  }
 
   .legend{display:flex;flex-wrap:wrap;gap:13px;font-size:11.5px;color:#666;margin-bottom:11px;padding-left:2px}
   .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
@@ -845,8 +839,16 @@ window.addEventListener("scroll",function(){
   });
   var qEl=document.getElementById("q");
   qEl.addEventListener("input",function(){ Q=this.value.trim().toLowerCase(); render(); });
-  // 电脑端日期导航的展开/收起状态记忆
-  try{ if(localStorage.getItem("zwb_cal_nav")==="1") document.documentElement.classList.add("navopen"); }catch(e){}
+  // 日期导航展开状态：记忆上次选择；首次访问手机/窄屏默认展开，电脑默认收起
+  try{
+    var savedNav=localStorage.getItem("zwb_cal_nav");
+    if(savedNav==="1") document.documentElement.classList.add("navopen");
+    else if(savedNav!=="0"){
+      var coarse=window.matchMedia&&window.matchMedia("(pointer: coarse)").matches;
+      var narrow=window.screen&&window.screen.width<900;
+      if(coarse||narrow) document.documentElement.classList.add("navopen");
+    }
+  }catch(e){}
   syncNavHandle();
   var bar=document.getElementById("wkbar");
   WEEKS.forEach(function(w,i){
