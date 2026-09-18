@@ -350,7 +350,7 @@ function save(){
     localStorage.setItem(K_L,JSON.stringify(PLEVEL));
   }catch(e){}
 }
-/* 我的分级：个人优先级覆盖官方分级（存本机，互不影响） */
+/* 我的分级：个人优先级覆盖默认分级（存本机，互不影响） */
 function effLevel(x,ix){
   var p=PLEVEL[KEYS[ix]];
   return (p>=1&&p<=4)?p:x[4];
@@ -729,7 +729,7 @@ function openM(ix){
   h+='<div class="kv"><span class="k">时间</span><span class="v">'+x[0].replace("-","月")+'日 '+x[1]+'</span></div>';
   h+='<div class="kv"><span class="k">地点</span><span class="v">'+x[3]+'</span></div>';
   h+='<div class="kv"><span class="k">分类</span><span class="v">'+sch+' <span class="mb" style="background:'+lv[1]+'">'+lv[0]+'</span></span></div>';
-  /* 我的分级：个人优先级覆盖（存本机；恢复官方分级可一键还原） */
+  /* 我的分级：个人优先级覆盖（存本机；恢复默认可一键还原） */
   var myl=PLEVEL[KEYS[ix]];
   var lvbtns=[["1","必去"],["2","优先"],["3","可去"],["4","可弃"]].map(function(o){
     var on=(lvNow===+o[0]), c=LV[+o[0]][1];
@@ -737,8 +737,8 @@ function openM(ix){
       ' onclick="setLv('+ix+','+o[0]+')">'+o[1]+'</span>';
   }).join("");
   var restoreHtml = myl
-    ? ' <a class="rel" onclick="setLv('+ix+',0)">恢复官方分级（'+LV[x[4]][0]+'）</a>'
-    : ' <span style="font-size:10.5px;color:#9aa19c">官方建议：'+LV[x[4]][0]+'</span>';
+    ? ' <a class="rel" onclick="setLv('+ix+',0)">恢复默认（'+LV[x[4]][0]+'）</a>'
+    : ' <span style="font-size:10.5px;color:#9aa19c">默认：'+LV[x[4]][0]+'</span>';
   h+='<div class="kv"><span class="k">我的分级</span><span class="v">'+lvbtns+restoreHtml+'</span></div>';
   /* 同单位在其他学校的场次：点击跳到那一场 */
   var rel=relatedSessions(ix);
