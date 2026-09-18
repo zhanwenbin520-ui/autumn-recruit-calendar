@@ -407,58 +407,31 @@ function dowOf(dstr){
   return ["周日","周一","周二","周三","周四","周五","周六"][wd];
 }
 
-/* ---------- 卡片跨校提示：同单位在别的学校也有场次（一次性预计算） ---------- */
-var _NT=null,_MU=null,_FIND=null;
-function normAllT(){
-  if(_NT) return;
-  _NT=D.map(function(x){ return normT(x[2]); });
-  var g={}, keys;
-  _NT.forEach(function(t,ix){ (g[t]=g[t]||[]).push(ix); });
-  keys=Object.keys(g);
-  var par={};
-  function find(k){ while(par[k]!==k){ par[k]=par[par[k]]; k=par[k]; } return k; }
-  keys.forEach(function(k){ par[k]=k; });
-  for(var i=0;i<keys.length;i++) for(var j=i+1;j<keys.length;j++){
-    var a=keys[i], b=keys[j];
-    if(sameUnit(a,b)){ var ra=find(a), rb=find(b); if(ra!==rb) par[ra]=rb; }
-  }
-  var byRoot={};
-  _FIND=find;
-  D.forEach(function(x,ix){
-    if(FOCUS.length){ var sc0=SCHOOL_SRC[x[8]]; if(sc0 && FOCUS.indexOf(sc0)<0) return; }
-    var own=SCHOOL_SRC[x[8]]||(MM[x[5]]||["","外校"])[1];
-    var r=find(_NT[ix]);
-    (byRoot[r]=byRoot[r]||[]).push({ix:ix, own:own, date:x[0]});
-  });
-  _MU={};
-  Object.keys(byRoot).forEach(function(r){
-    var bySchool={};
-    byRoot[r].forEach(function(o){ (bySchool[o.own]=bySchool[o.own]||[]).push(o.date); });
-    Object.keys(bySchool).forEach(function(own){
-      bySchool[own].forEach(function(date){
-        var parts=[], cnt=0;
-        Object.keys(bySchool).forEach(function(s){
-          if(s===own) return;
-          cnt++;
-          if(parts.length<3){
-            var ds=bySchool[s].filter(function(v,idx,arr){ return arr.indexOf(v)===idx; }).sort();
-            ds=ds.map(function(v){ return v.replace("09-","9/").replace("10-","10/"); });
-            if(ds.length>2) ds=ds.slice(0,2).concat("…");
-            parts.push(s+" "+ds.join("·"));
-          }
-        });
-        (_MU[r]=_MU[r]||{})[date+"|"+own]=parts.length?(parts.slice(0,3).join("、")+(parts.length>3?" 等"+cnt+"校":"")+" 也有"):"";
-      });
-    });
-  });
-}
+/* ---------- 卡片跨校提示：只信任"直接同单位"两两比对 ----------
+   不做传递性合并：A≈B、B≈C 的链条会把弱相似场次串进同簇，
+   曾导致航天科技误标"北科大 9/21"（实为幻影数据）。
+   normT 去掉"中国"前缀后可召回"中国航天科技集团…"长标题。 */
+var _NT=null;
 function multiHint(ix){
-  normAllT();
-  var x=D[ix];
-  var own=SCHOOL_SRC[x[8]]||(MM[x[5]]||["","外校"])[1];
-  var root=_FIND?_FIND(_NT[ix]):null;
-  var m=(root!==null&&_MU[root])||{};
-  return m[x[0]+"|"+own]||"";
+  var x=D[ix], own=SCHOOL_SRC[x[8]]||(MM[x[5]]||["","外校"])[1];
+  if(!_NT) _NT=D.map(function(y){ return normT(y[2]); });
+  var nx=normT(x[2]);
+  if(!nx || nx.length<2) return "";
+  var bySchool={};
+  D.forEach(function(y,jx){
+    if(jx===ix || hidden[KEYS[jx]]) return;
+    if(!sameUnit(nx,normT(y[2]))) return;
+    var s2=SCHOOL_SRC[y[8]]||(MM[y[5]]||["","外校"])[1];
+    if(s2===own) return;
+    (bySchool[s2]=bySchool[s2]||[]).push(y[0]);
+  });
+  var parts=Object.keys(bySchool).map(function(s2){
+    var ds=bySchool[s2].filter(function(v,i,a){ return a.indexOf(v)===i; }).sort()
+      .map(function(v){ return v.replace("09-","9/").replace("10-","10/"); });
+    if(ds.length>3) ds=ds.slice(0,3).concat("等");
+    return s2+" "+ds.join("·");
+  });
+  return parts.length?parts.join("、")+" 也有":" ";
 }
 
 function render(){
@@ -697,6 +670,7 @@ function normT(s){
     .replace(/校园|秋季|春季|全球|联合|空中宣讲会|宣讲会|宣讲|双选会|招聘会|洽谈会|见面会|专场|正式启动|启动会|暨|校招|招聘|年度/g,"")
     .replace(/有限公司|股份|公司|集团/g,"")
     .replace(/[+＋·—\-_/、，,]+/g,"")
+    .replace(/^中国/,"")
     .toLowerCase();
 }
 function sameUnit(a,b){
