@@ -12,10 +12,19 @@
    ============================================================ */
 
 /* 版本号规则：V{月}.{日}.{当日第几次更新}，如 9 月 7 日第 2 次更新 = V9.7.2，次日第 1 次 = V9.8.1 */
-var DATA_VERSION = "V9.18.5";
+var DATA_VERSION = "V9.18.6";
 
 /* 更新日志：key 必须等于某个版本的 DATA_VERSION，打开时只弹一次（存本机） */
 var CHANGELOG = {
+  "V9.18.6": {
+    title: "本次更新：市平台双选会集中上新 20 场 · 修正 2 处",
+    items: [
+      "全量比对<b>北京24365大学生就业服务平台</b>（市平台），补 <b>9/21-9/23 线下双选会 10 场</b>：含 9/23 北邮“网络强国招聘季”超大型综合场（130家，多家通信/航天央企）、北化工综合二场（100家）等",
+      "补 <b>10 月双选会 10 场</b>：10/22、10/29 两场<b>央国企·事业单位专场</b>（46家/50家，含启元实验室、北方华创、中能建等）为近期最重磅，另含五校联合（华电/石大在列）、学院路片区联合二场（300家）、北工大机械·材料专场（材料强对口）等",
+      "修正 2 处：9/21 一场宣讲时间按校方官网日历更正（18:30→19:00）；9/23 石油大学（北京）综合双选会时间落定 09:30-12:00（校方官方邀请函）"
+    ],
+    cheer: "日历越来越满，说明机会一直都在——挑对的那几场，把准备做在前面。"
+  },
   "V9.18.5": {
     title: "本次更新：我的分级——每场活动可自定义重要程度",
     items: [
@@ -778,7 +787,7 @@ var SRC = {
   thu:    { n: "清华大学学生职业发展指导中心",             u: "https://career.cic.tsinghua.edu.cn/" },
   thu2:   { n: "清华大学职业发展中心官网9月活动月历",       u: "https://career.tsinghua.edu.cn/" },
   pku:    { n: "北京大学学生就业指导服务中心",             u: "https://scc.pku.edu.cn/" },
-  city:   { n: "北京高校大学生就业创业信息网（成功就业）",   u: "https://www.bjbys.net.cn/" },
+  city:   { n: "北京高校大学生就业创业信息网（成功就业/北京24365平台）",   u: "https://www.bjbys.net.cn/" },
   muc:    { n: "中央民族大学学生就业服务信息网",            u: "https://career.muc.edu.cn/" },
   bjut:   { n: "北京工业大学就业创业服务网",               u: "https://job.bjut.edu.cn/" },
   bnu:    { n: "北京师范大学就业指导中心",                 u: "https://career.bnu.edu.cn/" },
@@ -2567,7 +2576,7 @@ var D = [
 ["09-20","14:30","上海市青浦区全国高校巡回引才活动-北京交通大学专场宣讲会","第一就业宣讲厅（九教中101）",3,"other","校内招聘会（服务器自动抓取）",0,"bjtu"],
 ["09-20","15:00","上海市青浦区全国高校巡回引才活动-北京交通大学专场","北京交通大学海淀校区南门广场",3,"other","线下（服务器自动抓取）",0,"bjtu"],
 // ============ 09/21 周一（自动抓取） ============
-["09-21","18:30","海信集团2027届校园招聘宣讲会","唯实报告厅",3,"bit","校内招聘会（服务器自动抓取）",0,"bit"],
+["09-21","19:00","海信集团2027届校园招聘宣讲会","唯实报告厅",3,"bit","校内招聘会（服务器自动抓取）；官网日历确认19:00（原抓取18:30）",0,"bit"],
 ["09-21","09:00","“青聚英才”上海市青浦区招才引智全国高校行活动——北京站","学院路新主楼二层平台",3,"buaa","组团招聘（服务器自动抓取）",0,"buaa"],
 // ============ 09/22 周二（自动抓取） ============
 ["09-22","09:00","千校联合校招 | 北京理工大学2027届毕业生秋季校园招聘会","体育馆南厅",3,"bit","校内招聘会（服务器自动抓取）",0,"bit"],
@@ -2667,4 +2676,25 @@ var D = [
 ["09-29","19:00","沐曦股份2027清华宣讲会","清华·天一厅",4,"thu","GPU芯片民企",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269659387"],
 ["09-22","13:30","【全市】京彩就业·中国社会科学院大学2027届秋季专场双选会（一）","社科大良乡校区图书馆东侧（房山区长于大街11号）",4,"city","13:30-16:30，约70家；远郊房山，综合类",0,"city","https://jobs.bjbys.net.cn/frontpage/bjbys/html/bilateralchosefairForm.html?fairType=1&id=c2b702eb0eaa44fdaa68ded0520dbbf6"],
 ["09-22","13:30","【全市】京彩就业·中华女子学院2026秋季专场双选会（一）","中华女子学院校内",4,"city","13:30-16:30；“2026秋季”为2026-2027学年秋季学期口径，面向届别以官网为准",0,"city","https://jobs.bjbys.net.cn/frontpage/bjbys/html/bilateralchosefairForm.html?fairType=1&id=ed2adeeafefb4f3e9f7e12840425f98c"],
+/* ---- V9.18.6 人工核补：北京24365平台（市平台）2026-09-18 ---- */
+["09-21","13:30","【全市】北京物资学院2027届毕业生秋招首场校园双选会（90家）","场地待确认（市平台专场）",4,"city","13:30起；综合类，通州区",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=27fbdb187fc646288e9088a9c84f7a72"],
+["09-22","14:00","【全市】京彩就业·中央财经大学2027届秋季综合双选会（一）（40家）","场地待确认（市平台专场）",4,"city","14:00起；金融财经类为主",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=dd44ffcb5f6e4af08ca13664d0ae712e"],
+["09-22","14:00","【全市】京彩就业·北京石油化工学院2027届线下专场双选会（一）（50家）","场地待确认（市平台专场）",4,"city","14:00起；大兴区，石化/能源类院校",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=f2934a05e9c740f7b86e0876cf17f5ad"],
+["09-23","13:30","【全市】首都经济贸易大学2027届红庙校区专场就业双选会（一）（120家）","首经贸红庙校区（具体场地待确认）",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=b4a2db478d9d434381185c90ac196fe3"],
+["09-23","13:30","【全市】宏志助航·北京工业大学专场双选会——信息科学技术学院、计算机学院专场（60家）","场地待确认（市平台专场）",3,"city","13:30起；ICT方向",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=ec85ae1938464a2e89f4f652be7fa454"],
+["09-23","13:30","【全市】京彩就业·北京联合大学2027届秋季首场校园双选会（30家）","场地待确认（市平台专场）",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=f32548742c034805ab9b9043e465a16b"],
+["09-23","14:00","【全市】“网络强国招聘季”北京邮电大学2026年秋季超大型综合双选会（130家）","北邮未来学习大楼广场+主席像广场",2,"city","14:00-17:00；央企国企含全路通信信号研究设计院、太极计算机、航天新长征大道、北自所等",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=0dfc94bd2ca848df86bc7116cecdfc08"],
+["09-23","14:00","【全市】北京化工大学2027届秋季综合类双选会（第二场）（100家）","场地待确认（市平台专场）",3,"city","14:00起；化工材料强对口",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=6096079dbc30404f80683440f1a59781"],
+["09-23","14:00","【全市】北京语言大学2027届秋季线下就业双选会（一）（60家）","场地待确认（市平台专场）",4,"city","14:00起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=7837a5953112427587d420fe16a30b30"],
+["09-23","14:00","【全市】北京农学院2026年秋季就业（实习）双选会（100家）","场地待确认（市平台专场，昌平）",4,"city","14:00起；偏农科",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=daf58ca3de154f5fabb512e540113bbf"],
+["10-14","13:30","【全市】北方工业大学2027届秋季双选会·喜迎建校80周年（200家）","场地待确认（市平台专场）",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=f5aa1f86fe5a48988ef35df975463f93"],
+["10-14","13:30","【全市】中国人民大学2026年秋季经管专场双选会（100家）","场地待确认（市平台专场）",3,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=5794fcab8d0e4f70971c7b9587c99e65"],
+["10-14","14:00","【全市】北京林业大学2027届毕业生秋季大型综合双选会（二）（160家）","场地待确认（市平台专场）",2,"city","14:00起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=8c7c30e65bb248c1a4fe0be893dc8196"],
+["10-15","14:00","【全市】京彩就业·中国地质大学（北京）2027届秋季综合类专场双选会（二）（100家）","场地待确认（市平台专场）",2,"city","14:00起；地矿能源口院校",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=6219bb007f574284a5892cba953550a1"],
+["10-16","09:00","【全市】京彩就业·2027届学院路片区联合秋季专场双选会（二）（北京科技大学，300家）","场地待确认（市平台专场）",2,"city","09:00起；学院路联合场第二弹",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=974b389f12ef48008ceb38bccee2a37a"],
+["10-22","14:00","【全市】京彩就业·北京大学2027届毕业生专场双选会（央国企、事业单位专场）（46家）","北大邱德拔体育馆北二层",1,"city","14:00-16:30；含北京市地铁运营、中建资本、启元实验室、北京生命科学研究所等央企与科研事业单位，岗位覆盖理工全口",1,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=ce521e9a02ec4dc08f94928cb6639a19"],
+["10-27","13:30","【全市】宏志助航·北京工业大学专场双选会——机械与能源工程学院、材料科学与工程学院专场（60家）","北工大学生综合服务楼四层多功能厅",2,"city","13:30起；材料方向强对口",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=731ad92bd865402181f4126ec6fc2f55"],
+["10-29","14:00","【全市】京彩就业·清华大学2027届毕业生专场双选会（央国企、事业单位专场）（50家）","清华·华为厅",1,"city","14:00起；含北方华创、中能建海外投资、中铁十六局、中船动力、华丞电子等央企",1,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=d251ae57994a4165bb21e12f0f873ee9"],
+["10-29","14:00","【全市】京彩就业·中国地质大学（北京）2027届秋季自然资源领域专场双选会（100家）","场地待确认（市平台专场）",2,"city","14:00起；自然资源/能源口",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=a7fdb2fbbd114f0a98436822f4e35b7d"],
+["10-30","14:00","【全市】五校联合双选会（一）：石油大学(北京)/北化工/法大/华电/央财（120家）","场地待确认（市平台专场）",2,"city","14:00起；华电、石大能源央企资源聚集，双碳对口",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=d20c2fc8c66d45cfb6d21df7207d0af5"],
 ];
