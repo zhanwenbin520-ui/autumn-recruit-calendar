@@ -175,6 +175,11 @@
     border-radius:5px;padding:1.5px 8px;margin:2px 4px 2px 0;font-size:12px;cursor:pointer;text-decoration:none;
   }
   .modal .rel:hover{background:#006C39;color:#fff;border-color:#006C39}
+  .modal .lvb{
+    display:inline-block;padding:2px 10px;margin:2px 4px 2px 0;border-radius:5px;
+    font-size:12px;cursor:pointer;border:1px solid #d5dbd3;background:#fff;color:#666;
+  }
+  .modal .lvb:hover{border-color:#006C39;color:#006C39}
   .modal .note{background:#fff8f3;border-left:3px solid #A13F0B;padding:8px 10px;border-radius:4px;
                font-size:12.5px;color:#7a3d18;margin-top:11px;line-height:1.65}
   .modal .src{background:#f1f6f2;border-left:3px solid #006C39;padding:8px 10px;border-radius:4px;
@@ -324,8 +329,8 @@ var focusOff=false; /* 退出聚焦模式=true：显示全部学校 */
 var SCHOOL_ORDER=["北理工","北航","清华","北大","北科大","北交大","北师大","农大","国科大","北林","民大","北工大","人大","地大"];
 
 var cur=0, filter="all", Q="";
-var K_H="zwb_cal_hidden_v2", K_U="zwb_cal_undo_v2", K_SEEN="zwb_cal_seen_ver";
-var hidden={}, undoStack=[];
+var K_H="zwb_cal_hidden_v2", K_U="zwb_cal_undo_v2", K_SEEN="zwb_cal_seen_ver", K_L="zwb_cal_level_v1";
+var hidden={}, undoStack=[], PLEVEL={};
 
 /* 稳定 key：日期|时间|单位 —— 数据增删不会串位 */
 var KEYS=[], KEY2IX={};
@@ -337,8 +342,22 @@ D.forEach(function(x,ix){
 
 try{ hidden=JSON.parse(localStorage.getItem(K_H)||"{}"); }catch(e){ hidden={}; }
 try{ undoStack=JSON.parse(localStorage.getItem(K_U)||"[]"); }catch(e){ undoStack=[]; }
+try{ PLEVEL=JSON.parse(localStorage.getItem(K_L)||"{}"); }catch(e){ PLEVEL={}; }
 function save(){
-  try{ localStorage.setItem(K_H,JSON.stringify(hidden)); localStorage.setItem(K_U,JSON.stringify(undoStack)); }catch(e){}
+  try{
+    localStorage.setItem(K_H,JSON.stringify(hidden));
+    localStorage.setItem(K_U,JSON.stringify(undoStack));
+    localStorage.setItem(K_L,JSON.stringify(PLEVEL));
+  }catch(e){}
+}
+/* 我的分级：个人优先级覆盖官方分级（存本机，互不影响） */
+function effLevel(x,ix){
+  var p=PLEVEL[KEYS[ix]];
+  return (p>=1&&p<=4)?p:x[4];
+}
+function setLv(ix,lv){
+  if(lv>=1&&lv<=4) PLEVEL[KEYS[ix]]=lv; else delete PLEVEL[KEYS[ix]];
+  save(); render(); openM(ix);
 }
 
 function srcOf(x){
@@ -364,13 +383,13 @@ var TODAY=todayStr();
 
 /* ---------- 搜索 ---------- */
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function passF(x){
+function passF(x,ix){
   if(!focusOff && FOCUS.length){
     var sc=SCHOOL_SRC[x[8]];
     if(sc && FOCUS.indexOf(sc)<0) return false;
   }
   if(filter==="all") return true;
-  if(filter==="key") return x[4]<=2;
+  if(filter==="key") return effLevel(x,ix)<=2;
   if(filter==="city") return x[5]==="city";
   if(filter==="other") return x[5]!=="city" && !SCHOOL_SRC[x[8]];
   if(filter.indexOf("s:")===0) return SCHOOL_SRC[x[8]]===filter.slice(2);
@@ -463,7 +482,7 @@ function render(){
       var vis=items.filter(function(ix){
         var x=D[ix];
         if(hidden[KEYS[ix]]) return false;
-        return passF(x) && matchQ(x);
+        return passF(x,ix) && matchQ(x);
       });
       // 每天内按开始时间排序（"待定"/"日期内"等无具体时间的排最后）
       vis.sort(function(a,b){
@@ -491,12 +510,13 @@ function render(){
 
 function cardHTML(ix){
   var x=D[ix], m=MM[x[5]]||["b-other","其他"], s=srcOf(x);
+  var lvNow=effLevel(x,ix);
   var badge = '<span class="badge '+m[0]+'">'+m[1]+'</span>';
   var kb = x[7] ? '<span class="badge b-key">重磅</span>' : '';
   var note = x[6] ? '<div class="n">'+linkify(x[6])+'</div>' : '';
   var mu = multiHint(ix) ? '<div class="mu">'+multiHint(ix)+'</div>' : '';
   var sl = s.u ? '<a class="sl" href="'+s.u+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">来源：'+s.n+' ↗</a>' : '';
-  return '<div class="ev l'+x[4]+'" data-i="'+ix+'" onclick="openM('+ix+')">'
+  return '<div class="ev l'+lvNow+'" data-i="'+ix+'" onclick="openM('+ix+')">'
     + '<div class="x" onclick="event.stopPropagation();hide('+ix+')" title="叉掉">&times;</div>'
     + '<div class="t">'+x[1]+'</div>'
     + '<div class="o">'+x[2]+badge+kb+'</div>'
@@ -509,7 +529,7 @@ function renderSearch(){
   var vis=[];
   D.forEach(function(x,ix){
     if(hidden[KEYS[ix]]) return;
-    if(!passF(x) || !matchQ(x)) return;
+    if(!passF(x,ix) || !matchQ(x)) return;
     vis.push(ix);
   });
   vis.sort(function(a,b){
@@ -547,11 +567,11 @@ function dayEvents(d){
   var out=[];
   D.forEach(function(x,ix){
     if(x[0]!==d || hidden[KEYS[ix]]) return;
-    if(!passF(x) || !matchQ(x)) return;
+    if(!passF(x,ix) || !matchQ(x)) return;
     var s=srcOf(x);
     out.push({
       时间:x[1], 活动:x[2], 学校:(SCHOOL_SRC[x[8]]||(MM[x[5]]||["","其他"])[1]),
-      地点:x[3], 级别:(LV[x[4]]||[""])[0], 备注:(x[6]||"").replace(/<[^>]*>/g,""),
+      地点:x[3], 级别:(LV[effLevel(x,ix)]||[""])[0], 备注:(x[6]||"").replace(/<[^>]*>/g,""),
       来源链接:(x[9]||s.u||"")
     });
   });
@@ -700,7 +720,8 @@ function relatedSessions(ix){
 
 function openM(ix){
   var x=D[ix], m=MM[x[5]]||["b-other","其他"], s=srcOf(x);
-  var lv=LV[x[4]]||["","#666"];
+  var lvNow=effLevel(x,ix);
+  var lv=LV[lvNow]||["","#666"];
   var kb = x[7] ? '<span class="mb" style="background:#A13F0B">重磅</span>' : '';
   var sch = '<span class="mb" style="background:'+(MC[x[5]]||"#9a9a9a")+'">'+m[1]+'</span>';
   var h='';
@@ -708,6 +729,17 @@ function openM(ix){
   h+='<div class="kv"><span class="k">时间</span><span class="v">'+x[0].replace("-","月")+'日 '+x[1]+'</span></div>';
   h+='<div class="kv"><span class="k">地点</span><span class="v">'+x[3]+'</span></div>';
   h+='<div class="kv"><span class="k">分类</span><span class="v">'+sch+' <span class="mb" style="background:'+lv[1]+'">'+lv[0]+'</span></span></div>';
+  /* 我的分级：个人优先级覆盖（存本机；恢复官方分级可一键还原） */
+  var myl=PLEVEL[KEYS[ix]];
+  var lvbtns=[["1","必去"],["2","优先"],["3","可去"],["4","可弃"]].map(function(o){
+    var on=(lvNow===+o[0]), c=LV[+o[0]][1];
+    return '<span class="lvb'+(on?" on":"")+'"'+(on?' style="background:'+c+';border-color:'+c+';color:#fff"':'')+
+      ' onclick="setLv('+ix+','+o[0]+')">'+o[1]+'</span>';
+  }).join("");
+  var restoreHtml = myl
+    ? ' <a class="rel" onclick="setLv('+ix+',0)">恢复官方分级（'+LV[x[4]][0]+'）</a>'
+    : ' <span style="font-size:10.5px;color:#9aa19c">官方建议：'+LV[x[4]][0]+'</span>';
+  h+='<div class="kv"><span class="k">我的分级</span><span class="v">'+lvbtns+restoreHtml+'</span></div>';
   /* 同单位在其他学校的场次：点击跳到那一场 */
   var rel=relatedSessions(ix);
   if(rel.length){
