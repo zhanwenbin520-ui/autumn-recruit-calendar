@@ -179,14 +179,6 @@ const CHEERS = [
           var arr=apiByDate.get(k)||[]; if(arr.indexOf(n0)<0) arr.push(n0); apiByDate.set(k,arr);
         }
       });
-      /* 登记官网当前列出的全部场次（供临期重校验比对） */
-      items.forEach(function(it){
-        var d0=(it.startTimeFormat||'').trim();
-        if(/^\d{4}-\d{2}-\d{2}$/.test(d0)){
-          var k=d0.slice(5), n0=norm(it.title||'');
-          var arr=apiByDate.get(k)||[]; if(arr.indexOf(n0)<0) arr.push(n0); apiByDate.set(k,arr);
-        }
-      });
       for (const it of items) {
         const date = (it.startTimeFormat || '').trim();
         const time = (it.startTimexs || '').trim();
@@ -331,31 +323,6 @@ const CHEERS = [
     }
   })();
 
-  /* ---- 临期重校验：官网已不再列出的临期场次（14 天内）自动移除 ----
-  /* 五矿 9/20 事故的根治：学校改期/撤场后，官网接口不再列出该场次，
-     本轮自动清退看板上对应的过期条目（仅限接口直接来源的学校） */
-  (function(){
-    var apiOK = perSite.every(function(p){ return p.ok; });
-    if(!apiOK){ console.log("有站点抓取失败，跳过临期重校验"); return; }
-    var limFrom=today.slice(5), limTo=dayOf(limFrom,14);
-    var removedRows=[];
-    var lines=fs.readFileSync(EV,"utf8").split("\n");
-    var kept=lines.filter(function(l){
-      var m=l.match(/^\["(\d{2}-\d{2})","([^"]*)","([^"]*)"/);
-      if(!m) return true;
-      var srcKey=(l.match(/"([a-z0-9]+)"\]\s*$/) || [])[1];
-      if(!SITES.some(function(s){ return s.src===srcKey; })) return true;
-      var d=m[1];
-      if(!(d>=limFrom && d<=limTo)) return true;
-      var nt=norm(m[3]);
-      var arr=(apiByDate.get(d)||[]).filter(function(n2){ return isDup(nt,n2)||n2.indexOf(nt)>=0||nt.indexOf(n2)>=0; });
-      return arr.length>0;
-    });
-    if(kept.length!==lines.length){
-      fs.writeFileSync(EV,kept.join("\n"));
-      console.log("临期重校验：移除官网已撤下的",lines.length-kept.length,"场");
-    }
-  })();
 
   /* 写盘自检：events.js 必须可解析、可执行且 D 为非空数组，否则回滚并放弃推送
      （2026-09-08 事故教训：语法损坏的 events.js 一旦上线，看板全页空白） */
