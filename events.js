@@ -12,10 +12,18 @@
    ============================================================ */
 
 /* 版本号规则：V{月}.{日}.{当日第几次更新}，如 9 月 7 日第 2 次更新 = V9.7.2，次日第 1 次 = V9.8.1 */
-var DATA_VERSION = "V9.20.5";
+var DATA_VERSION = "V9.20.6";
 
 /* 更新日志：key 必须等于某个版本的 DATA_VERSION，打开时只弹一次（存本机） */
 var CHANGELOG = {
+  "V9.20.6": {
+    title: "本次更新：修正 1 处改期",
+    items: [
+      "修正：<b>京津冀专场双选会</b>官方详情页已核实改期至 <b>10/22（周三）14:00-16:30</b>，原排期 10/21 已作废",
+      "全量比对三源（市平台双选会接口 9/20 后 114 场、国科大宣讲接口 205 条、本校就业网 9-10 月日历）：无其他新增或变更，央企宣讲行程亦无新增北京站"
+    ],
+    cheer: "排期在变，准备不变。把手里的牌打好，机会自然找上门。"
+  },
   "V9.20.5": {
     title: "本次更新：人工核补 3 场",
     items: [
@@ -2997,7 +3005,7 @@ var D = [
 ["10-21","13:30","【全市】首都经济贸易大学2027届秋季大型综合就业双选会（二）","首经贸校本部体育馆",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=727e2ad0e237475998840681ff029a78"],
 ["10-21","13:30","【全市】北京劳动保障职业学院2027届秋季校园双选会","劳保职院北校区体育馆",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=90938deec85646b4b858108eafd84684"],
 ["10-21","13:30","【全市】北京经贸职业学院2027届校园招聘会","经贸职院教学楼二层多功能厅",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=945e5d7cc08f4e138d07c44a0f5063ae"],
-["10-21","14:00","【全市】【京津冀专场】“京彩就业”2027届高校毕业生专场双选会","市就业指导中心双选会大厅（海淀清河）",4,"city","14:00起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=edae60f82db84590969f83c14ba21c18"],
+["10-22","14:00","【全市】【京津冀专场】“京彩就业”2027届高校毕业生专场双选会","市就业指导中心双选会大厅（海淀清河）",4,"city","14:00-16:30；官方详情页9/20核实已改期至10/22（原排期10/21）",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=edae60f82db84590969f83c14ba21c18"],
 ["10-22","14:00","【全市】2026年“才聚文旅 职引未来”高校毕业生秋季专场双选会","市就业指导中心双选会大厅（海淀清河）",4,"city","14:00起；文旅方向",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=35b6989fd0aa4a94885c269bd5bee27e"],
 ["10-27","13:30","【全市】北京培黎职业学院2027届秋季专场双选会（二）","培黎职院校园操场",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=5de7dc520e1e40d895d390331ccd4ae2"],
 ["10-28","13:30","【全市】首都经济贸易大学2027届红庙校区专场就业双选会（二）","首经贸红庙校区会展中心",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=3aec2b1cb0f04b7887aef8c21808ef42"],
