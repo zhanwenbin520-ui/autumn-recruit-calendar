@@ -12,10 +12,20 @@
    ============================================================ */
 
 /* 版本号规则：V{月}.{日}.{当日第几次更新}，如 9 月 7 日第 2 次更新 = V9.7.2，次日第 1 次 = V9.8.1 */
-var DATA_VERSION = "V9.20.1";
+var DATA_VERSION = "V9.20.2";
 
 /* 更新日志：key 必须等于某个版本的 DATA_VERSION，打开时只弹一次（存本机） */
 var CHANGELOG = {
+  "V9.20.2": {
+    title: "本次更新：人工核补 8 场",
+    items: [
+      "补 <b>清华 5 场</b>：<b>9/24 10:00 商务部招录宣讲会</b>（部委场，体制内方向）、9/21 杭州引才专场 + 浦东新区青年人才直通车清华专场、9/23 全国博士博后巡回签约洽谈会清华站 + 西南交大师资、9/24 莉莉丝",
+      "补 <b>9/28 中核集团北师大专场招聘会</b>（14:30 京师学堂京师厅，中核组团在京第 6 站，官网详情页核实）",
+      "补 <b>10/16 人大秋季法律专场双选会</b>（市平台）",
+      "清华就业网接口 9/20-9/30 全量 97 条逐条比对：其余 10 条均为已录入的双厅合并记录，无缺口"
+    ],
+    cheer: "日历越满，底气越足。按优先级走，不慌。"
+  },
   "V9.20.1": {
     title: "本次更新：服务器自动抓取补 7 场",
     items: [
@@ -1229,6 +1239,8 @@ var D = [
 ["09-21","18:30","云深处科技","中教425",4,"bit","",0,"bit"],
 ["09-21","18:30","国瓷材料2027届校园招聘宣讲会","北航沙河校区J5-105教室",3,"buaa","电子陶瓷材料，材料方向强对口；总部山东东营，工作地点以岗位为准；官网新上架",0,"buaa"],
 ["09-21","10:00","中信集团总部宣讲会","清华·职业发展中心华为多功能厅",2,"thu","接口确认10:00-12:00；北理工9/7已办，可二刷问细节",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260695342"],
+["09-21","09:30","“潮聚杭州”高校行·2026年杭州市赴北京引才活动（清华专场）","清华·职业发展中心祖龙广场",3,"thu","杭州单位组团引才，岗位属地杭州；与同日上午余杭巡回引才相邻时段，可连跑",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261270077"],
+["09-21","14:00","2026浦东新区青年人才直通车·清华大学专场（宣讲+重点单位双选）","清华·华为多功能厅（宣讲）+祖龙广场（双选）",3,"thu","官网同刻两厅两条记录，合并录入；岗位属地上海浦东；北大9/20场已在库",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260762025"],
 ["09-21","19:00","快手2027届秋季校园招聘","北大英杰阳光厅",4,"pku","官网最新时间19:00（原记18:30）",0,"pku"],
 ["09-21","日期内","中国兵器工业集团 宣讲会（北航场）","北航校内（具体场地待确认）",2,"buaa","集团全国宣讲行程北京段第2站：9/21下午；次日9/22清华也有兵器场",0,"bqxc","https://www.offcn.com/gqzp/2026/0902/254105.html"],
 ["09-22","日期内","中国兵器工业集团 宣讲会（北邮场）","北邮校内（具体场地待确认）",2,"other","集团全国宣讲行程北京段第3站：9/22上午；当天下午清华也有兵器场，次日北理本部专场",0,"bqxc","https://www.offcn.com/gqzp/2026/0902/254105.html"],
@@ -1286,6 +1298,7 @@ var D = [
 // ============ 9/28 周一 ============
 ["09-28","16:00","招商银行北京分行","唯实报告厅",3,"bit","北京属地，金融央企",0,"bit"],
 ["09-28","13:30","中建三局第一建设工程","唯实报告厅",4,"bit","",0,"bit"],
+["09-28","14:30","中核集团2027届北师大专场招聘会","北师大京师学堂京师厅",2,"other","14:30-17:00；中核组团在京第6站（北大9/18、北理9/21、北航9/22、地大9/24之后），不限专业本硕博；网申 cnnc.zhiye.com",0,"bnu","https://career.bnu.edu.cn/f/recruitmentFair/show?recruitmentFairId=656fb18c01fd4fdeb4f4df60610701d7"],
 ["09-28","18:30","北电数智","唯实报告厅",4,"bit","",0,"bit"],
 ["09-28","18:30","中信建投证券2027届秋季校招宣讲会（机构业务专场）","中教425",3,"bit","中信系，金融方向；北航9/11有一场综合",0,"bit","https://job.bit.edu.cn/f/recruitmentFair/show?recruitmentFairId=7329fbd9c7804cdf867893b87fb80dbc"],
 ["09-28","18:30","荣耀2026年校园宣讲会","北大英杰月光厅",4,"pku","",0,"pku"],
@@ -2795,6 +2808,8 @@ var D = [
 ["09-23","09:30","中国电信集团2027年度校园招聘（清华场·宣讲+双选）","清华·华为多功能厅",3,"thu","央企运营商；北航9/20、北大9/21、国科大9/22组团场已录",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260066986"],
 ["09-23","09:30","中国国新控股2027届校园招聘（清华场·宣讲+双选）","清华·美团创新空间",2,"thu","央企资本运营公司，总部北京；北航9/17、北大9/22也有",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269202351"],
 ["09-23","09:30","中国航发湖南动力机械研究所2027届校园招聘宣讲会（清华场）","清华·海博思创厅",3,"thu","航发株洲所；北理9/22也有场",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=268386203"],
+["09-23","09:30","2026年秋季全国博士、博士后高层次人才巡回签约洽谈会（清华站）","清华·职业发展中心祖龙广场",4,"thu","偏博士/博后，硕士酌情；清华接口首次确认此场（此前9/12清华条目两源冲突，以本条为准）",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=265837255"],
+["09-23","09:30","西南交通大学2027全球校园师资招聘宣讲会（清华场）","清华·职业发展中心东风汽车厅",4,"thu","外地高校教职；北理9/10、北航9/11师资场已录",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260822623"],
 ["09-23","14:00","新紫光集团（清华场）","清华·美团创新空间",3,"thu","紫光系，芯片/信息产业",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261145422"],
 ["09-23","14:00","上海光通信2027届校园招聘宣讲会（清华场）","清华·海博思创厅",4,"thu","光通信民企",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269689346"],
 ["09-23","14:00","中国航天科技集团2026年校园招聘会（清华场）","清华·华为多功能厅",2,"thu","航天央企，北京院所多；北理9/22、北航9/18、北大9/17已有；官网另有祖龙广场同日记录，两厅同场",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=261721484"],
@@ -2808,6 +2823,8 @@ var D = [
 ["09-23","19:00","快手2027届秋季校园招聘宣讲会（清华场）","清华·浪潮厅",4,"thu","互联网民企；北大9/21也有",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=260802477"],
 ["09-24","09:30","国家管网集团2027届校园招聘（清华场·宣讲+双选）","清华·浪潮厅（宣讲）+祖龙广场（双选）",2,"thu","官网同日两厅两条记录，合并录入；北大9/20、北航9/21、北理9/20专场已有",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266950504"],
 ["09-24","09:30","中国工程物理研究院校园招聘（清华场）","清华·美团创新空间",2,"thu","军工，属地四川绵阳；北航9/23、北理9/24也有",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266895208"],
+["09-24","10:00","中华人民共和国商务部招录宣讲会（清华场）","清华·职业发展中心华为多功能厅",2,"thu","部委招录，体制内重磅；北大9/14商务部宣讲已在库，可参考其口径提前准备",1,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263218348"],
+["09-24","09:30","莉莉丝27届校园宣讲（清华场）","清华·职业发展中心东风汽车厅",4,"thu","游戏民企；北大9/23也有",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=268007084"],
 ["09-24","14:00","千寻智能2027届校园招聘线下宣讲会（清华场）","清华·天一厅",4,"thu","机器人民企",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267906374"],
 ["09-24","14:00","国家能源集团2027届校园招聘-清华大学专场双选会","清华·美团创新空间",2,"thu","直招网申9/19截止、统招10/7截止；在京单位要求本硕双一流，符合条件尽早报",1,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=268551718"],
 ["09-24","14:00","中航科创2027届校园招聘宣讲会（清华场）","清华·华为多功能厅",3,"thu","航空工业旗下；北航9/23也有",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267593835"],
@@ -2945,6 +2962,7 @@ var D = [
 ["10-16","09:00","【全市】北京培黎职业学院2027届秋季专场双选会（一）","培黎职院校园操场",4,"city","09:00起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=254b6120ef064b109b034d52db556e00"],
 ["10-16","13:30","【全市】“京彩就业”国科大2027届毕业生秋季双选会2","国科大中关村校区教学楼大厅",3,"city","13:30起；9/18首场之外第二场，中科院系单位多",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=21d401a34a914cb08c715ab9ee6bcf7e"],
 ["10-16","13:30","【全市】北京联合大学2027届秋季综合校园双选会（二）","联大北四环校区体育馆综合馆",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=98a43ab09f174eaabd33206bc2adae14"],
+["10-16","13:30","【全市】中国人民大学2026年秋季法律专场双选会","人大中关村校区世纪馆主馆",4,"city","13:30起；法律专场，与理工科专业对口度低",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=e83e6032da9b486596aeee5474b55712"],
 ["10-19","13:30","【全市】北京经济管理职业学院2027届秋季专场双选会（望京校区）","经管职院望京校区体育馆",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=0c1fb20b21b34f898b90b8d1ef068513"],
 ["10-20","14:00","【全市】【教育综合专场】“京彩就业”2027届高校毕业生专场双选会","市就业指导中心双选会大厅（海淀清河）",4,"city","14:00起；教师岗为主",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=9160edf021fd4e76ae232627e891a126"],
 ["10-21","13:30","【全市】北工大耿丹学院2027届秋季校园双选会","耿丹学院教学区（顺义）",4,"city","13:30起",0,"city","https://jobs.bjbys.net.cn/f/bilateralchosefair/show?bilateralchosefairId=63416b40df024b64b8a4b99872eb68a7"],
