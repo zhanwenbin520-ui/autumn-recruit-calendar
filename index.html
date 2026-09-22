@@ -332,6 +332,8 @@ var focusOff=false; /* 退出聚焦模式=true：显示全部学校 */
 var SCHOOL_ORDER=["北理工","北航","清华","北大","北科大","北交大","北师大","农大","国科大","北林","民大","北工大","人大","地大"];
 
 var cur=0, filter="all", Q="";
+/* 隐秘黑名单：非 985/211 院校与远郊场馆的场次一律不展示（硬过滤，不受聚焦开关影响）。匹配主办方/场地 */
+var BLOCK_SCHOOLS=/农学院|物资学院|城市学院|联合大学|联大|信息科技|服装学院|印刷学院|石油化工|工商大学|经济管理职业|劳动保障职业|经贸职业|培黎职业|政法职业|清河就业大厅|职院/;
 var K_H="zwb_cal_hidden_v2", K_U="zwb_cal_undo_v2", K_SEEN="zwb_cal_seen_ver", K_L="zwb_cal_level_v1";
 var hidden={}, undoStack=[], PLEVEL={};
 
@@ -387,6 +389,7 @@ var TODAY=todayStr();
 /* ---------- 搜索 ---------- */
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function passF(x,ix){
+  if(BLOCK_SCHOOLS.test(x[2]+" "+x[3])) return false;
   if(!focusOff && FOCUS.length){
     var sc=SCHOOL_SRC[x[8]];
     if(sc && FOCUS.indexOf(sc)<0) return false;
