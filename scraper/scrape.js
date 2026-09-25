@@ -252,11 +252,21 @@ const CHEERS = [
     /* 天块之间必须有逗号：块内行尾无逗号，join('\n') 会让相邻 ["MM-DD",...] 行
        解析成成员访问链导致 events.js 语法损坏（2026-09-08 全页空白事故根因） */
     const blocks = Object.keys(dayMap).sort().map(mm => dayComment(mm) + '\n' + dayMap[mm].join(',\n')).join(',\n');
-    return src
-      .replace(/,\s*\n\];/, '\n];')                      // 规范化：去掉可能已存在的数组尾逗号
-      .replace('var CHANGELOG = {\n', 'var CHANGELOG = {\n' + changelog)
-      .replace(/var DATA_VERSION = "[^"]+";/, `var DATA_VERSION = "${VER}";`)
-      .replace(/\n\];\s*$/, ',\n' + blocks + '\n];\n');  // 上一元素补逗号 + 新块（每行自带逗号）
+    /* 2026-09-26 修复：旧实现用 /\n\];\s*$/ 锚点插入，要求 ]; 独占一行；
+       5d63406 黑名单清退后 events.js 尾部变成 ..."],];（同行），锚点永不匹配，
+       数据被静默丢弃、只 bump 版本（V9.26.2 假推送事故根因）。
+       改为按最后 ]; 位置 splice，兼容任意尾格式，且插入失败直接抛错 */
+    const i = src.lastIndexOf('];');
+    if (i < 0) throw new Error('insertBlock：events.js 未找到数组结尾 ];');
+    let head = src.slice(0, i).replace(/\s+$/, '');
+    if (!/,$/.test(head)) head += ','; // 上一元素补逗号（兼容旧行尾无逗号格式）
+    let out = head + '\n' + blocks + '\n' + src.slice(i);
+    out = out.replace('var CHANGELOG = {\n', 'var CHANGELOG = {\n' + changelog)
+             .replace(/var DATA_VERSION = "[^"]+";/, `var DATA_VERSION = "${VER}";`);
+    /* 插入校验：任抽首行新数据确认落盘，杜绝"只 bump 版本不插数据"的静默丢失 */
+    const firstMM = Object.keys(dayMap).sort()[0];
+    if (out.indexOf(dayMap[firstMM][0]) < 0) throw new Error('insertBlock：新数据行未插入（尾格式异常），拒绝写盘');
+    return out;
   };
 
   if (dryRun) {
