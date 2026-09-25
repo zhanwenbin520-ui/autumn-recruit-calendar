@@ -74,6 +74,14 @@ async function fetchMonth(site, ym, referer) {
 function bjNow() { return new Date(Date.now() + 8 * 3600e3); }
 function pad2(n) { return String(n).padStart(2, '0'); }
 
+/* MM-DD 加 n 天返回 MM-DD（临期重校验用；2026-09-26 修复：该函数此前被引用但从未定义，
+   导致 cron 自 9/22 起每次在临期重校验阶段抛 ReferenceError 全量停摆） */
+function dayOf(mmdd, n) {
+  var p = mmdd.split('-');
+  var d = new Date(2001, parseInt(p[0], 10) - 1, parseInt(p[1], 10) + n);
+  return pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+}
+
 /* 标题归一化：剥掉届别/场次类型后缀（库里是简称、接口是全称） */
 const ALIAS = [[/北京理工大学/g, '北理工'], [/北京大学/g, '北大'], [/北京航空航天大学/g, '北航'], [/北京师范大学/g, '北师大']];
 function norm(s) {
