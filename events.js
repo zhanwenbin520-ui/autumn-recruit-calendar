@@ -12,10 +12,20 @@
    ============================================================ */
 
 /* 版本号规则：V{月}.{日}.{当日第几次更新}，如 9 月 7 日第 2 次更新 = V9.7.2，次日第 1 次 = V9.8.1 */
-var DATA_VERSION = "V9.26.7";
+var DATA_VERSION = "V9.26.8";
 
 /* 更新日志：key 必须等于某个版本的 DATA_VERSION，打开时只弹一次（存本机） */
 var CHANGELOG = {
+  "V9.26.8": {
+    title: "本次更新：补 1 场 + 核验修正 2 处",
+    items: [
+      "补 <b>11/3 北京工商大学嘉华学院实习就业双选会</b>（民办本科场，市平台 9/26 新上架）",
+      "修正：<b>10/12 寒武纪（国科大场）</b>地点已由官网接口核验确认——中关村教学楼一层 S102",
+      "核验：<b>海信国科大场</b>——官网接口现仅余 10/14 19:00（S104）一场，原 10/15 S204 条目已从官网下架（疑改期/合并），行前以官网为准"
+    ],
+    cheer: "信息核得越实，路上心里越稳。继续按自己的节奏走。"
+  },
+
   "V9.26.7": {
     title: "本次更新：补 1 场",
     items: [
@@ -2452,7 +2462,7 @@ var D = [
 ["10-09","19:00","成都海集科技2027届校园招聘宣讲会（国科大场）","国科大教学楼N306",4,"other","国科大官网10月新上架（人工核补）",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=4da8500c67244378bdaf8abb1c95c20c"],
 ["10-09","19:00","中国电科第二十八研究所（南京电子工程研究所）2027届校园招聘宣讲会（国科大场）","国科大中关村教学楼一层S104",3,"other","军工电子骨干院所，岗位属地南京；电科系北理9/16、9/17有14所场",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=6b35d67bbf974012a22909d4d1b22135"],
 ["10-12","14:00","东风汽车集团2027届校园招聘宣讲会（国科大场）","国科大中关村教学楼二层N215",3,"other","汽车央企；北大10/12 14:00也有东风研发总院场，疑为同一行程两站（待确认）",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=ff7a073631cd4b028869bdc4d6f82b78"],
-["10-12","19:00","中科寒武纪2027届校园招聘宣讲会（国科大场）","国科大中关村校区（官网地点栏未填，待确认）",4,"other","AI芯片设计；官网该场地点字段异常（填成了标题），时间19:00-21:00已确认",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=a2538694485f4aed87b0fba95545d8dd"],
+["10-12","19:00","中科寒武纪2027届校园招聘宣讲会（国科大场）","国科大中关村教学楼一层S102",4,"other","AI芯片设计；地点已由官网接口核验确认（9/26），时间19:00-21:00",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=a2538694485f4aed87b0fba95545d8dd"],
 ["10-12","19:00","上海思朗科技2027届校园招聘宣讲会（国科大场）","国科大教学楼N108",4,"other","国产DSP芯片；北大10/15 19:00也有场",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=060ea3e1bd4d4775aa93e12dade949a8"],
 ["10-13","14:00","珠海格力电器2027届校园招聘宣讲会（国科大场）","国科大中关村教学楼一层S102",3,"other","制造业龙头，材料/结构岗少量",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=b6e3630805b748fd912021d2d1030947"],
 ["10-13","14:00","北京华丞电子2027届校园招聘宣讲会（国科大场）","国科大中关村教学楼三层N313",3,"other","半导体设备核心零部件，材料对口；官网3月也开过场",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=cc7cf9eebfb7413f905ecb25ee328b7c"],
@@ -3083,7 +3093,7 @@ var D = [
 ["10-09","19:00","科大讯飞2027届校招宣讲会（国科大场）","国科大中关村教学楼一层S102",3,"other","国科大官网10月新上架（接口全量比对）",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=c75241b19ff744e98bc039c1514b8887"],
 ["10-12","19:00","中国网安/三十所2027届校园招聘宣讲会（国科大场）","国科大中关村教学楼三层N313",3,"other","电科系网络安全院所，岗位属地成都；北理10/10也有场",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=1a54e1867d3748e69a4a6a85b0c5cffc"],
 ["10-14","19:00","兴唐通信科技2027届校园招聘宣讲会（国科大场）","国科大中关村教学楼三层N313",3,"other","电科系通信企业；北理10/16 18:30也有场",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=0606e0c2689943e595e7befa89cbad70"],
-["10-15","19:00","海信集团2027届校园招聘宣讲会（国科大场）","国科大中关村教学楼二层S204",4,"other","家电/电子信息集团；北理9/21、北航9/23也有场",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=2b220196f9cf495bbd762782e18c0f85"],
+["10-15","19:00","海信集团2027届校园招聘宣讲会（国科大场）","国科大中关村教学楼二层S204",4,"other","家电/电子信息集团；北理9/21、北航9/23也有场；⚠️9/26核验：官网接口已不再显示本场（仅余10/14 19:00 S104场），疑改期/下架，行前以官网为准",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=2b220196f9cf495bbd762782e18c0f85"],
 ["10-15","19:00","东莞市新兴产业投资2027校园招聘（国科大场）","国科大中关村教学楼一层S104",4,"other","国资半导体投资平台，岗位属地东莞",0,"ucas","https://job.ucas.edu.cn/f/recruitmentFair/show?recruitmentFairId=616a92890d4b45e68e51e88b03e85df7"],
 
 // ============ V9.18.9 人工核补：北京24365市平台双选会接口全量比对增量（2026-09-18） ============
