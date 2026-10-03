@@ -12,10 +12,18 @@
    ============================================================ */
 
 /* 版本号规则：V{月}.{日}.{当日第几次更新}，如 9 月 7 日第 2 次更新 = V9.7.2，次日第 1 次 = V9.8.1 */
-var DATA_VERSION = "V10.2.2";
+var DATA_VERSION = "V10.3.1";
 
 /* 更新日志：key 必须等于某个版本的 DATA_VERSION，打开时只弹一次（存本机） */
 var CHANGELOG = {
+  "V10.3.1": {
+    title: "本次更新：修正 1 处（清华广州六中场改期）",
+    items: [
+      "修正 <b>清华 10/13 广州市第六中学</b>秋季招聘宣讲会 → <b>10/16（周五）19:00-21:00</b>，地点不变（职业发展中心昆山国际会议厅），以清华就业网活动接口最新数据为准",
+      "全量核验 4 源零缺口：清华活动接口 10/8-10/22 共 46 条、北理官网 10 月 94 条、北师大 10-11 月日历 93 条、国科大 10 月 33 条，均与库内一致；京彩就业市平台系统升级维护持续，恢复后自动补查"
+    ],
+    cheer: "假期余额清零没关系，信息储备已经满格，开学第一天就出发。"
+  },
   "V10.2.2": {
     title: "本次更新：补 5 场（国网新疆电力提前批北京段）",
     items: [
@@ -3678,7 +3686,7 @@ var D = [
 ["10-12","19:00","远景动力2027届校园招聘宣讲会","清华·职业发展中心天一厅",3,"thu","电池（远景旗下）",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=268288752"],
 ["10-12","19:00","当升科技2027届校园招聘清华宣讲会","清华·职业发展中心海博思创厅",2,"thu","央企矿冶集团旗下正极材料龙头，材料强对口",1,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=263225883"],
 ["10-12","19:00","美的集团2027届校园招聘宣讲会","清华·职业发展中心美团创新空间",4,"thu","",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269305785"],
-["10-13","14:30","广州市第六中学秋季招聘（市属编制68人）","清华·职业发展中心昆山国际会议厅",3,"thu","编制岗，城市为广州",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267568403"],
+["10-16","19:00","广州市第六中学秋季招聘（市属编制68人）","清华·职业发展中心昆山国际会议厅",3,"thu","编制岗，城市为广州；19:00-21:00（官网日历已更新，原记 10/13 14:30）",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=267568403"],
 ["10-14","19:00","北京比特大陆2027校园招聘","清华·职业发展中心海博思创厅",4,"thu","",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=269048742"],
 ["10-15","14:00","AI赋能能源 共话智能未来","清华·职业发展中心海博思创厅",3,"thu","能源+AI主题，主办单位待确认",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=266383079"],
 ["10-22","待定","清华大学2026年秋季生物医药大健康专场招聘会","清华大学学生职业发展指导中心祖龙广场",3,"thu","大中型双选，接口未给开始时间，待确认",0,"thu","https://career.cic.tsinghua.edu.cn/xsglxt/f/jyxt/anony/gotoZpxxList?id=11422031"],
